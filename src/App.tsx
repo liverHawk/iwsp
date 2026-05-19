@@ -202,9 +202,16 @@ function App() {
           <SectionLabel accent>対象商品</SectionLabel>
           <div className="product-card">
             <div className="product-left">
-              <p className="product-name">
-                ランダム生写真［8th ver.］&nbsp;/&nbsp;花柄
+              <p className="product-name">ランダム生写真【8th衣装】</p>
+              <p className="product-note">
+                各5枚1セット・特典券1枚付き・当日商品・交換不可
               </p>
+            </div>
+            <div className="product-price">¥1,650</div>
+          </div>
+          <div className="product-card">
+            <div className="product-left">
+              <p className="product-name">ランダム生写真【花柄】</p>
               <p className="product-note">
                 各5枚1セット・特典券1枚付き・当日商品・交換不可
               </p>
@@ -259,6 +266,35 @@ function App() {
               <li key={i}>{n}</li>
             ))}
           </ul>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 参考リンク ── */}
+        <section className="section">
+          <SectionLabel accent>公式お知らせ</SectionLabel>
+          <div className="ref-links">
+            <a
+              href="https://whitescorpion.jp/news/2026/04/23/9831/"
+              target="_blank"
+              rel="noreferrer"
+              className="ref-link"
+            >
+              <span className="ref-link-date">2026.04.23</span>
+              <span className="ref-link-label">イベント概要・特典会詳細</span>
+              <span className="ref-link-arrow">詳しくはこちら →</span>
+            </a>
+            <a
+              href="https://whitescorpion.jp/news/2026/05/12/10094/"
+              target="_blank"
+              rel="noreferrer"
+              className="ref-link"
+            >
+              <span className="ref-link-date">2026.05.12</span>
+              <span className="ref-link-label">追加・変更情報</span>
+              <span className="ref-link-arrow">詳しくはこちら →</span>
+            </a>
+          </div>
         </section>
 
         <hr className="rule" />

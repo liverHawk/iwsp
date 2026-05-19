@@ -539,6 +539,63 @@ body {
     flex-shrink: 0;
 }
 
+/* ── REF LINKS ── */
+.ref-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ref-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 4px;
+    text-decoration: none;
+    transition:
+        border-color 0.2s,
+        background 0.2s;
+}
+.ref-link:hover {
+    border-color: var(--red);
+    background: var(--bg-card2);
+}
+.ref-link:hover .ref-link-arrow {
+    color: var(--red);
+    letter-spacing: 0.1em;
+}
+
+.ref-link-date {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.ref-link-label {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.04em;
+}
+
+.ref-link-arrow {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition:
+        color 0.2s,
+        letter-spacing 0.2s;
+}
+
 /* ── CONTACT ── */
 .contact-section {
     text-align: center;
