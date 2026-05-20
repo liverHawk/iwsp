@@ -398,36 +398,385 @@ body {
     margin-top: 5px;
 }
 
-/* ── MEMBERS ── */
-.member-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+/* ── MEMBERS GRID ── */
+.member-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 16px;
 }
 
-.member-chip {
+@media (min-width: 480px) {
+    .member-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .member-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+    }
+}
+
+.member-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                border-color 0.3s ease;
+}
+
+.member-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: var(--col);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5),
+                0 0 12px var(--col);
+}
+
+.member-card-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: #111;
+}
+
+.member-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.member-card:hover .member-card-img-wrap img {
+    transform: scale(1.05);
+}
+
+.member-card-info {
+    padding: 8px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.member-card-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+/* inactive member (休養中) */
+.member-card.inactive {
+    filter: grayscale(100%) opacity(0.5);
+    border-color: rgba(255, 255, 255, 0.05);
+    cursor: not-allowed;
+}
+
+.member-card.inactive:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.member-card.inactive .member-card-img-wrap img {
+    transform: none;
+}
+
+.inactive-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #ccc;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+/* ── PROFILE MODAL ── */
+.profile-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 5, 5, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    animation: modal-fade-in 0.3s ease forwards;
+}
+
+@keyframes modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.profile-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    background: rgba(18, 18, 18, 0.85);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: modal-scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modal-scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.profile-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.profile-modal-close:hover {
+    background: #c4172a;
+    border-color: #c4172a;
+    transform: rotate(90deg);
+}
+
+.profile-modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 600px) {
+    .profile-modal-body {
+        flex-direction: row;
+    }
+}
+
+.profile-modal-image-wrap {
+    position: relative;
+    flex: 1.1;
+    aspect-ratio: 2 / 3;
+    max-height: 480px;
+    background: #111;
+}
+
+.profile-modal-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Photo Switcher Overlay */
+.photo-switcher {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+    padding: 20px 12px 12px;
+    gap: 8px;
+    box-sizing: border-box;
+    z-index: 5;
+}
+
+.switcher-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-dim);
+    font-size: 10px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    padding: 6px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.switcher-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-bright);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.switcher-btn.active {
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--text-bright);
+    border-color: var(--col);
+    box-shadow: 0 0 12px var(--col), inset 0 0 4px var(--col);
+}
+
+
+.modal-inactive-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(196, 23, 42, 0.9);
+    color: #fff;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 10px rgba(196, 23, 42, 0.5);
+}
+
+.profile-modal-info {
+    flex: 1.3;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(10, 10, 10, 0.95));
+}
+
+.profile-modal-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin-bottom: 16px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.profile-modal-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 13px;
     color: var(--text-bright);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 6px 14px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.04);
-    transition:
-        border-color 0.2s,
-        background 0.2s;
 }
-.member-chip:hover {
-    border-color: var(--red);
-    background: rgba(196, 23, 42, 0.1);
+
+.meta-item {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 6px;
 }
-.member-chip.inactive {
+
+.meta-label {
+    width: 110px;
     color: var(--text-dim);
-    border-color: rgba(255, 255, 255, 0.1);
-    background: transparent;
-    font-style: italic;
+    font-weight: 600;
 }
+
+.meta-value {
+    font-weight: 700;
+}
+
+.profile-modal-message-box {
+    margin-bottom: 24px;
+}
+
+.message-title {
+    display: block;
+    font-family: "Outfit", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+}
+
+.profile-modal-message {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-bright);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.profile-modal-sns {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.sns-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+}
+
+.sns-btn.x {
+    background: #222;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.sns-btn.x:hover {
+    background: #000;
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.sns-btn.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #fff;
+}
+
+.sns-btn.instagram:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 10px rgba(220, 39, 67, 0.4);
+    transform: translateY(-1px);
+}
+
+.sns-btn.tiktok {
+    background: #000;
+    color: #fff;
+    border-color: #00f2fe;
+    box-shadow: inset 0 0 4px #fe0979;
+}
+
+.sns-btn.tiktok:hover {
+    border-color: #fe0979;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.4), inset 0 0 4px #00f2fe;
+    transform: translateY(-1px);
+}
+
 
 /* ── PRODUCT CARD ── */
 .product-card {
