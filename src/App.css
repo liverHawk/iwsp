@@ -105,6 +105,22 @@ body {
     display: block;
     /* white PNG on dark bg — boost contrast slightly */
     filter: drop-shadow(0 0 24px rgba(196, 23, 42, 0.5));
+    opacity: 0;
+    animation: logo-fade-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes logo-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+        filter: drop-shadow(0 0 0 rgba(196, 23, 42, 0));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 0 24px rgba(196, 23, 42, 0.5));
+    }
 }
 
 /* hero body: event info + poster */
@@ -692,4 +708,152 @@ body {
     .footer {
         padding: 28px 24px;
     }
+}
+
+/* ══════════════════════════════════════════════
+   COUNTDOWN TIMER
+   ══════════════════════════════════════════════ */
+.countdown-container {
+    margin-top: 24px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(196, 23, 42, 0.25);
+    border-radius: 6px;
+    box-shadow: 
+        0 8px 32px 0 rgba(0, 0, 0, 0.37),
+        0 0 15px 0 rgba(196, 23, 42, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-self: flex-start;
+    width: 100%;
+    max-width: 440px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.countdown-container:hover {
+    border-color: rgba(196, 23, 42, 0.5);
+    box-shadow: 
+        0 8px 32px 0 rgba(0, 0, 0, 0.37),
+        0 0 25px 0 rgba(196, 23, 42, 0.2);
+}
+
+.countdown-container.ended {
+    padding: 24px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(196, 23, 42, 0.05);
+    border-color: var(--red);
+    box-shadow: 0 0 20px var(--red-glow);
+}
+
+.countdown-ended-text {
+    font-family: 'Bebas Neue', var(--font-sans);
+    font-size: 28px;
+    color: var(--text-bright);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px var(--red-glow);
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.countdown-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Outfit', var(--font-sans);
+    font-weight: 600;
+}
+
+.countdown-pulse-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--red);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px var(--red);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+        transform: scale(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0.4;
+        transform: scale(0.9);
+    }
+}
+
+.countdown-grid {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    min-width: 68px;
+    padding: 8px 4px 6px;
+}
+
+.countdown-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 12px var(--red-glow);
+}
+
+.countdown-unit {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-family: 'Outfit', var(--font-sans);
+    font-weight: 600;
+}
+
+.countdown-colon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--red);
+    opacity: 0.8;
+    margin-bottom: 12px;
+    animation: blink 1s infinite steps(1, start);
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.countdown-days-go {
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-family: 'Outfit', var(--font-sans);
 }
