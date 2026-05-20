@@ -624,7 +624,7 @@ body {
     left: 0;
     width: 100%;
     display: flex;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.72) 70%, transparent 100%);
     padding: 20px 12px 12px;
     gap: 8px;
     box-sizing: border-box;
@@ -633,9 +633,9 @@ body {
 
 .switcher-btn {
     flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--text-dim);
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: var(--text-bright);
     font-size: 10px;
     font-family: 'Outfit', sans-serif;
     letter-spacing: -0.01em;
@@ -649,13 +649,13 @@ body {
 }
 
 .switcher-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.78);
     color: var(--text-bright);
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
 .switcher-btn.active {
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.86);
     color: var(--text-bright);
     border-color: var(--col);
     box-shadow: 0 0 12px var(--col), inset 0 0 4px var(--col);
