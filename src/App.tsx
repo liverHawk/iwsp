@@ -371,7 +371,6 @@ function App() {
       ════════════════════════════════ */}
       <div className="artist-strip">
         <img src={artistImg} alt="WHITE SCORPION" />
-        <div className="artist-strip-fade top" />
         <div className="artist-strip-fade bottom" />
       </div>
 
