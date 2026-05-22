@@ -36,7 +36,7 @@ const calculateTimeLeft = (targetTime: number): TimeLeft => {
 };
 
 const pad = (value: number) => String(value).padStart(2, "0");
-type TimeCardCSSProps = CSSProperties & Record<"--intro-delay" | "--beat-delay", string>;
+type TimeCardInlineStyle = CSSProperties & Record<"--intro-delay" | "--beat-delay", string>;
 
 export default function App() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(TARGET_TIME));
@@ -393,7 +393,7 @@ export default function App() {
 
           <div className="timer-grid" role="timer" aria-live="polite">
             {cards.map((card, index) => {
-              const style: TimeCardCSSProps = {
+              const style: TimeCardInlineStyle = {
                 "--intro-delay": `${index * 0.08}s`,
                 "--beat-delay": `${index * 0.1}s`,
               };
