@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 
 type TimeLeft = {
   totalMs: number;
@@ -36,6 +36,7 @@ const calculateTimeLeft = (targetTime: number): TimeLeft => {
 };
 
 const pad = (value: number) => String(value).padStart(2, "0");
+type TimeCardStyle = CSSProperties & Record<"--intro-delay" | "--beat-delay", string>;
 
 export default function App() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(TARGET_TIME));
@@ -391,15 +392,14 @@ export default function App() {
           </p>
 
           <div className="timer-grid" role="timer" aria-live="polite">
-            {cards.map((card, index) => (
-              <article
-                key={card.label}
-                className="time-card"
-                style={{
-                  ["--intro-delay" as string]: `${index * 0.08}s`,
-                  ["--beat-delay" as string]: `${index * 0.1}s`,
-                }}
-              >
+            {cards.map((card, index) => {
+              const style: TimeCardStyle = {
+                "--intro-delay": `${index * 0.08}s`,
+                "--beat-delay": `${index * 0.1}s`,
+              };
+
+              return (
+                <article key={card.label} className="time-card" style={style}>
                 <div className="value-line">
                   <p className="value">{card.value}</p>
                   {card.label === "SECONDS" && inLastSpurt ? (
@@ -411,7 +411,8 @@ export default function App() {
                 </div>
                 <div className="label">{card.label}</div>
               </article>
-            ))}
+              );
+            })}
           </div>
 
           <div className="status">
