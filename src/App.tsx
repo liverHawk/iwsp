@@ -244,7 +244,7 @@ function SectionLabel({
   );
 }
 
-function CountdownTimer() {
+function useCountdown() {
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
     hours: number;
@@ -262,7 +262,7 @@ function CountdownTimer() {
 
       if (difference <= 0) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: true });
-        return true; // over
+        return true;
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -280,6 +280,45 @@ function CountdownTimer() {
     const interval = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  return timeLeft;
+}
+
+function CountdownBanner() {
+  const timeLeft = useCountdown();
+  const pad = (num: number) => String(num).padStart(2, "0");
+
+  if (timeLeft.isOver) {
+    return (
+      <div className="countdown-banner ended">
+        <span className="countdown-banner-pulse" />
+        <span className="countdown-banner-text">RELEASE EVENT STARTED!</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="countdown-banner">
+      <span className="countdown-banner-label">5.30 RELEASE EVENT</span>
+      <div className="countdown-banner-timer">
+        <span className="countdown-banner-num">{pad(timeLeft.days)}</span>
+        <span className="countdown-banner-unit">d</span>
+        <span className="countdown-banner-sep">:</span>
+        <span className="countdown-banner-num">{pad(timeLeft.hours)}</span>
+        <span className="countdown-banner-unit">h</span>
+        <span className="countdown-banner-sep">:</span>
+        <span className="countdown-banner-num">{pad(timeLeft.minutes)}</span>
+        <span className="countdown-banner-unit">m</span>
+        <span className="countdown-banner-sep">:</span>
+        <span className="countdown-banner-num">{pad(timeLeft.seconds)}</span>
+        <span className="countdown-banner-unit">s</span>
+      </div>
+    </div>
+  );
+}
+
+function CountdownTimer() {
+  const timeLeft = useCountdown();
 
   if (timeLeft.isOver) {
     return (
@@ -329,6 +368,8 @@ function App() {
 
   return (
     <div className="page">
+      <CountdownBanner />
+
       {/* ════════════════════════════════
           HERO
       ════════════════════════════════ */}
