@@ -1,6 +1,250 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useState, useEffect } from "react";
+import flyerImg from "./assets/flyer.jpg";
+import artistImg from "./assets/artist.jpg";
+import charImg from "./assets/char.png";
+import "./App.css";
 
-type TimeLeft = {
+interface Member {
+  name: string;
+  color: string;
+  colorName: string;
+  birthday: string;
+  birthplace: string;
+  image: string;
+  specialImage: string;
+  message: string;
+  sns: {
+    x?: string;
+    instagram?: string;
+    tiktok?: string;
+  };
+  inactive?: boolean;
+}
+
+const memberList: Member[] = [
+  {
+    name: "ACE",
+    color: "#5DC9FF",
+    colorName: "ライトブルー",
+    birthday: "11月6日",
+    birthplace: "福岡県",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_ACE_-–-1.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_ace.jpg",
+    message: "えーすです🐹すちゃんって呼んでね~ 2006.11.6 福岡県出身 ライトブルー担当🩵 ラーメンとハムスターとアイドルが好きです♡ 私のファンの方は『はむちゃんず』と呼んでいます♡あなたもぜひはむちゃんずになってね♡",
+    sns: {
+      x: "https://twitter.com/ACE_whsp",
+      instagram: "https://instagram.com/ACE_whsp_IG",
+      tiktok: "https://www.tiktok.com/@su.___.uu"
+    }
+  },
+  {
+    name: "ACO",
+    color: "#FF9400",
+    colorName: "オレンジ",
+    birthday: "5月30日",
+    birthplace: "岡山県",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_ACO_-–-2.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_aco.jpg",
+    message: "岡山県出身21歳あこだよー！ ファンネームはア国民✨ 見た目はクールだけど実はよく喋るしニコニコ(^-^) よく転ぶ抜けてる面もあるけど、パフォーマンスでは可愛さとかっこよさを使い分けてます！ 乃木坂46さん、ドラえもん、アーニャ、ラーメンが好き♡ あこのことよろしくね〜",
+    sns: {
+      x: "https://twitter.com/ACO_whsp",
+      instagram: "https://instagram.com/ACO_whsp_IG",
+      tiktok: "https://www.tiktok.com/@aco_530"
+    }
+  },
+  {
+    name: "ALLY",
+    color: "#0051D8",
+    colorName: "ブルー",
+    birthday: "4月17日",
+    birthplace: "京都府",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_ALLY_-–-3.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_ally.jpg",
+    message: "ALLYです🦂 京都府出身でメンバーカラーはブルーです！最年長のお姉さん担当でお洋服が好きです👗 ホワスピはライブではクールな印象ですが、話すと明るい子ばかりです！ 楽しませる自信があるので是非1度会いに来ませんか？🤍",
+    sns: {
+      x: "https://x.com/ALLY_whsp_",
+      instagram: "https://instagram.com/ALLY_whsp_IG",
+      tiktok: "https://www.tiktok.com/@ally_whsp"
+    }
+  },
+  {
+    name: "AOI",
+    color: "#06B05F",
+    colorName: "グリーン",
+    birthday: "10月13日",
+    birthplace: "東京都",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_AOI_-–-4.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_aoi.jpg",
+    message: "AOIです！2004年10月13日生まれ of B型。 たれ目・声・えくぼがチャームポイント。 趣味は舞台観劇やアニメ映画、空を見ること。 特技は爪楊枝まつ毛乗せと「叩いて被ってじゃんけんぽん」。 歌も踊りも大好きです！ わたしのこと覚えてくれたら嬉しいです！",
+    sns: {
+      x: "https://twitter.com/AOI_whsp",
+      instagram: "https://instagram.com/AOI_whsp_IG",
+      tiktok: "https://www.tiktok.com/@___aoi_s2"
+    }
+  },
+  {
+    name: "CHOCO",
+    color: "#FFADE6",
+    colorName: "ライトピンク",
+    birthday: "12月27日",
+    birthplace: "東京都",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_CHOCO_-–-5.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_choco.jpg",
+    message: "東京都出身北海道育ち！18歳！ライトピンク担当！ CHOCOです🍫🎀 アニメやゲームなど2次元が大好きで、コスプレをしたり、痛バや自作PCも組んでるよ～ 食べる事も大好き🍚 可愛いモード of ホワイトチョコも、毒舌モード of ダークチョコも愛してね♡",
+    sns: {
+      x: "https://twitter.com/CHOCO_whsp",
+      instagram: "https://instagram.com/CHOCO_whsp_IG",
+      tiktok: "https://www.tiktok.com/@choco._.nyan"
+    }
+  },
+  {
+    name: "COCO",
+    color: "#DED300",
+    colorName: "イエロー",
+    birthday: "3月18日",
+    birthplace: "北海道",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_COCO_-–-6.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_coco.jpg",
+    message: "WHITE SCORPION の北海道出身19歳COCOです。 シルバニアファミリー集めとパン屋さん巡りが大好きです。 ステージ場で1番小さいのがわたしなので見つけてみてください〜！！ ホワスピのこと大好きになってくれたら嬉しいです。",
+    sns: {
+      x: "https://twitter.com/COCO_whsp",
+      instagram: "https://instagram.com/COCO_whsp_IG",
+      tiktok: "https://www.tiktok.com/@ohayo_cocodayo"
+    }
+  },
+  {
+    name: "HANNA",
+    color: "#E50104",
+    colorName: "レッド",
+    birthday: "12月17日",
+    birthplace: "兵庫県",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_HANNA_-–-7.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_hanna.jpg",
+    message: "おハンナ！最年少16歳、最高身長167cmのHANNAです🐰 兵庫県出身でゲーム大好き、いちご、グミが大好きです🍓 パフォーマンスと日常のギャップを見て欲しいです！ ハンナがみんなの妹になります！沢山見ててね👀♡",
+    sns: {
+      x: "https://twitter.com/HANNA_whsp",
+      instagram: "https://instagram.com/HANNA_whsp_IG",
+      tiktok: "https://www.tiktok.com/@usagi._.93"
+    }
+  },
+  {
+    name: "MOMO",
+    color: "#AFE311",
+    colorName: "ライトグリーン",
+    birthday: "12月7日",
+    birthplace: "東京都",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_MOMO_-–-8.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_momo.jpg",
+    message: "東京都出身19歳のMOMOです🍑 ♡ホワスピのほわほわ感担当 ♡アイドル大好き ♡ちょっぴり世間知らず ♡特技はフィギュアスケートとアクション もものこと好きになって欲しいの🎀",
+    sns: {
+      x: "https://twitter.com/MOMO_whsp",
+      instagram: "https://instagram.com/MOMO_whsp_IG",
+      tiktok: "https://www.tiktok.com/@momo_whsp_"
+    }
+  },
+  {
+    name: "NATSU",
+    color: "#AF43C9",
+    colorName: "パープル",
+    birthday: "7月16日",
+    birthplace: "神奈川県",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_NATSU_-–-9.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_natsu.jpg",
+    message: "神奈川県出身21歳のNATSUです！ ホワスピのメロい担当。 低音イケメンボイスであなたのハートを射抜くこと間違いなし！ 感性豊かでメンバー一の泣き虫。ブログが道徳の教科書の様。 たまにネジが外れて親父ギャグを連発する。",
+    sns: {
+      x: "https://twitter.com/NATSU_whsp",
+      instagram: "https://instagram.com/NATSU_whsp_IG",
+      tiktok: "https://www.tiktok.com/@imnatsuwhsp"
+    }
+  },
+  {
+    name: "NAVI",
+    color: "#502793",
+    colorName: "バイオレット",
+    birthday: "3月20日",
+    birthplace: "岡山県",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_NAVI_-–-10.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_navi.jpg",
+    message: "初めましてNAVIです！岡山県出身22歳♡ パフォーマンスピカイチで担当カラーはバイオレット💜 韓国語もペラペラです！趣味はセルフネイルやファッションなどたくさん✨ 今見てくれてるあなたにはNAVI・ホワスピを選んで欲しいなっ！会いに来てね🤍",
+    sns: {
+      x: "https://twitter.com/NAVI_whsp",
+      instagram: "https://instagram.com/NAVI_whsp_IG",
+      tiktok: "https://www.tiktok.com/@your_naviiii"
+    }
+  },
+  {
+    name: "NICO",
+    color: "#FF4292",
+    colorName: "ピンク",
+    birthday: "5月23日",
+    birthplace: "富山県",
+    image: "https://whitescorpion.jp/wp-content/uploads/2024/08/20260324_NICO_-–-11.jpg",
+    specialImage: "https://whitescorpion.jp/special202509/images/ws_member_nico.jpg",
+    message: "ホワスピのNICOです❤ 富山県/21歳です✩ よく笑うのでニコです(*^^*) 海！山！川！自然大好き！ いつか私の運転でメンバーとピクニックへ行きたい！ またすぐに会えるかな？☺ 会える日を願って今日よりもレベルアップするね！❤",
+    sns: {
+      x: "https://twitter.com/NICO_whsp",
+      instagram: "https://instagram.com/NICO_whsp_IG",
+      tiktok: "https://www.tiktok.com/@smile_.nico"
+    }
+  }
+];
+const payments = [
+  "現金",
+  "VISA",
+  "Mastercard",
+  "JCB",
+  "交通系IC",
+  "iD",
+  "QUICPay",
+  "nanaco",
+];
+
+const tokutenItems = [
+  {
+    title: "全員ハイタッチ会",
+    body: "友だち招待キャンペーンの参加券のみで参加可（通常特典券では参加不可）",
+    ticket: null,
+  },
+  {
+    title: "撮影可能ハイタッチ会",
+    body: "片手でハイタッチしながらもう片手で自分のスマホ純正カメラアプリで動画撮影可能。画面録画機能OFF必須",
+    ticket: "特典券 1枚",
+  },
+  {
+    title: "2ショット撮影会",
+    body: "希望メンバー1名との2ショット。自分のスマホでスタッフが撮影",
+    ticket: "特典券 2枚",
+  },
+  {
+    title: "ペア握手会",
+    body: "指定ペア握手レーンのいずれかに1回参加可",
+    ticket: "特典券 1枚",
+  },
+];
+
+const notes = [
+  "会場は屋外。雨具（カッパ等）は自己持参。観覧中の傘（日傘含む）使用禁止",
+  "ジャンプ・サークルモッシュ・ダイブなど危険行為禁止",
+  "サイリウム・タオルの大きな振り回し禁止",
+  "飲酒状態での参加、入り待ち・出待ち、荷物による場所取り、深夜・早朝の待機すべて禁止",
+  "会場内にロッカー・クロークなし。大きな荷物は駅などのコインロッカーを利用",
+  "特典券の転売・第三者譲渡禁止",
+  "小学生以下は20歳以上の保護者同伴必須",
+];
+
+function SectionLabel({
+  children,
+  accent = false,
+}: {
+  children: React.ReactNode;
+  accent?: boolean;
+}) {
+  return (
+    <p className={`section-label ${accent ? "accent" : ""}`}>{children}</p>
+  );
+}
+
+type CountdownState = {
   totalMs: number;
   days: number;
   hours: number;
@@ -8,428 +252,505 @@ type TimeLeft = {
   seconds: number;
   hundredths: number;
   isOver: boolean;
+  isLastSpurt: boolean;
 };
 
-const ONE_HOUR_MS = 60 * 60 * 1000;
-const INTRO_DURATION = "1.2s";
+const LAST_SPURT_MS = 60 * 60 * 1000;
 
-const TARGET_TIME = Date.now() + (2 * 60 * 60 + 17 * 60 + 25) * 1000;
+const pad = (num: number) => String(num).padStart(2, "0");
 
-const calculateTimeLeft = (targetTime: number): TimeLeft => {
-  const totalMs = Math.max(0, targetTime - Date.now());
-
-  const days = Math.floor(totalMs / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((totalMs / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((totalMs / (1000 * 60)) % 60);
-  const seconds = Math.floor((totalMs / 1000) % 60);
-  const hundredths = Math.floor((totalMs % 1000) / 10);
+const createCountdownState = (target: number, forceLastSpurt = false): CountdownState => {
+  const now = new Date().getTime();
+  const difference = Math.max(0, target - now);
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((difference / (1000 * 60)) % 60);
+  const seconds = Math.floor((difference / 1000) % 60);
+  const hundredths = Math.floor((difference % 1000) / 10);
+  const isOver = difference <= 0;
+  const isLastSpurt = !isOver && (difference <= LAST_SPURT_MS || forceLastSpurt);
 
   return {
-    totalMs,
+    totalMs: difference,
     days,
     hours,
     minutes,
     seconds,
     hundredths,
-    isOver: totalMs <= 0,
+    isOver,
+    isLastSpurt,
   };
 };
 
-const pad = (value: number) => String(value).padStart(2, "0");
-type TimeCardInlineStyle = CSSProperties & Record<"--intro-delay" | "--beat-delay", string>;
-
-export default function App() {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(TARGET_TIME));
-  const [isLastSpurt, setIsLastSpurt] = useState(false);
-
-  const inLastSpurt = useMemo(
-    () => isLastSpurt || (timeLeft.totalMs > 0 && timeLeft.totalMs <= ONE_HOUR_MS),
-    [isLastSpurt, timeLeft.totalMs],
+function useCountdown(forceLastSpurt = false) {
+  const target = new Date("2026-05-30T10:30:00+09:00").getTime();
+  const [timeLeft, setTimeLeft] = useState<CountdownState>(() =>
+    createCountdownState(target, forceLastSpurt),
   );
 
   useEffect(() => {
-    const interval = window.setInterval(
-      () => setTimeLeft(calculateTimeLeft(TARGET_TIME)),
-      inLastSpurt ? 10 : 1000,
+    const tick = () => setTimeLeft(createCountdownState(target, forceLastSpurt));
+
+    tick();
+    const interval = setInterval(tick, timeLeft.isLastSpurt ? 10 : 1000);
+    return () => clearInterval(interval);
+  }, [forceLastSpurt, target, timeLeft.isLastSpurt]);
+
+  return timeLeft;
+}
+
+function CountdownBanner() {
+  const timeLeft = useCountdown();
+
+  if (timeLeft.isOver) {
+    return (
+      <div className="countdown-banner ended">
+        <span className="countdown-banner-text">RELEASE EVENT STARTED!</span>
+      </div>
     );
-
-    return () => window.clearInterval(interval);
-  }, [inLastSpurt]);
-
-  const cards = [
-    { label: "DAYS", value: pad(timeLeft.days) },
-    { label: "HOURS", value: pad(timeLeft.hours) },
-    { label: "MINUTES", value: pad(timeLeft.minutes) },
-    { label: "SECONDS", value: pad(timeLeft.seconds) },
-  ];
+  }
 
   return (
-    <>
-      <style>{`
-        :root {
-          color-scheme: dark;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-
-        body {
-          margin: 0;
-          font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-          min-height: 100vh;
-          background:
-            radial-gradient(50rem 50rem at 15% 20%, rgba(99, 102, 241, 0.26), transparent 60%),
-            radial-gradient(45rem 45rem at 85% 80%, rgba(217, 70, 239, 0.2), transparent 60%),
-            linear-gradient(165deg, #020617 0%, #0f172a 45%, #090f1f 100%);
-          color: #e5e7eb;
-        }
-
-        .screen {
-          min-height: 100vh;
-          width: 100%;
-          padding: clamp(20px, 5vw, 56px);
-          display: grid;
-          place-items: center;
-          overflow: hidden;
-          position: relative;
-        }
-
-        .screen::before,
-        .screen::after {
-          content: "";
-          position: absolute;
-          inset: auto;
-          width: clamp(220px, 40vw, 460px);
-          aspect-ratio: 1;
-          border-radius: 999px;
-          filter: blur(80px);
-          z-index: 0;
-          pointer-events: none;
-        }
-
-        .screen::before {
-          top: -120px;
-          right: -120px;
-          background: rgba(129, 140, 248, 0.26);
-        }
-
-        .screen::after {
-          bottom: -120px;
-          left: -120px;
-          background: rgba(236, 72, 153, 0.2);
-        }
-
-        .timer-wrap {
-          width: min(100%, 980px);
-          position: relative;
-          z-index: 1;
-          border-radius: 28px;
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          box-shadow:
-            0 35px 80px rgba(2, 6, 23, 0.6),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
-          padding: clamp(20px, 5vw, 42px);
-          transition:
-            border-color 500ms ease,
-            box-shadow 500ms ease,
-            background-color 500ms ease;
-        }
-
-        .timer-wrap.last-spurt {
-          background: linear-gradient(
-            145deg,
-            rgba(255, 255, 255, 0.1),
-            rgba(255, 58, 127, 0.12)
-          );
-          border-color: rgba(239, 68, 68, 0.4);
-          box-shadow:
-            0 35px 90px rgba(2, 6, 23, 0.68),
-            0 0 45px rgba(236, 72, 153, 0.3),
-            0 0 70px rgba(239, 68, 68, 0.23),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .eyebrow {
-          margin: 0 0 12px;
-          font-size: clamp(11px, 1.9vw, 13px);
-          letter-spacing: 0.24em;
-          text-transform: uppercase;
-          color: rgba(226, 232, 240, 0.82);
-        }
-
-        .heading {
-          margin: 0;
-          font-size: clamp(22px, 5.5vw, 38px);
-          line-height: 1.15;
-          letter-spacing: 0.02em;
-          color: #f8fafc;
-          text-wrap: balance;
-        }
-
-        .caption {
-          margin: 12px 0 22px;
-          font-size: clamp(13px, 2.2vw, 16px);
-          color: rgba(203, 213, 225, 0.9);
-        }
-
-        .timer-grid {
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: clamp(8px, 2.2vw, 16px);
-        }
-
-        .time-card {
-          border-radius: 20px;
-          padding: clamp(14px, 2.5vw, 20px);
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.16);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          box-shadow:
-            0 12px 28px rgba(2, 6, 23, 0.42),
-            inset 0 1px 0 rgba(255, 255, 255, 0.17);
-          animation: liquidGlow ${INTRO_DURATION} ease-in-out both;
-          animation-delay: var(--intro-delay, 0s);
-          transform-origin: center;
-          transition:
-            border-color 400ms ease,
-            box-shadow 400ms ease,
-            background-color 400ms ease;
-          min-width: 0;
-        }
-
-        .timer-wrap.last-spurt .time-card {
-          border-color: rgba(239, 68, 68, 0.4);
-          background: rgba(255, 90, 110, 0.12);
-          box-shadow:
-            0 14px 30px rgba(2, 6, 23, 0.52),
-            0 0 22px rgba(236, 72, 153, 0.26),
-            inset 0 1px 0 rgba(255, 255, 255, 0.17);
-          animation: heartbeat 1.9s ease-in-out infinite;
-          animation-delay: var(--beat-delay, 0s);
-        }
-
-        .value-line {
-          display: inline-flex;
-          align-items: baseline;
-          gap: 2px;
-          min-width: 0;
-        }
-
-        .value {
-          margin: 0;
-          font-size: clamp(32px, 8vw, 64px);
-          font-weight: 800;
-          line-height: 0.92;
-          letter-spacing: -0.03em;
-          color: #f8fafc;
-          font-family: "SF Mono", "Roboto Mono", "JetBrains Mono", ui-monospace, monospace;
-          font-variant-numeric: tabular-nums;
-          font-feature-settings: "tnum" 1;
-          text-shadow: 0 0 16px rgba(191, 219, 254, 0.33);
-          white-space: nowrap;
-        }
-
-        .timer-wrap.last-spurt .value {
-          text-shadow:
-            0 0 20px rgba(251, 113, 133, 0.65),
-            0 0 34px rgba(236, 72, 153, 0.55);
-        }
-
-        .ms-inline {
-          display: inline-flex;
-          align-items: baseline;
-          white-space: nowrap;
-        }
-
-        .ms-dot {
-          font-size: clamp(22px, 4.5vw, 34px);
-          color: rgba(251, 113, 133, 0.95);
-          line-height: 1;
-          margin-right: 2px;
-          font-family: "SF Mono", "Roboto Mono", "JetBrains Mono", ui-monospace, monospace;
-          font-variant-numeric: tabular-nums;
-          font-feature-settings: "tnum" 1;
-        }
-
-        .ms-value {
-          font-size: clamp(20px, 3.9vw, 32px);
-          font-weight: 800;
-          color: #fb7185;
-          line-height: 1;
-          font-family: "SF Mono", "Roboto Mono", "JetBrains Mono", ui-monospace, monospace;
-          font-variant-numeric: tabular-nums;
-          font-feature-settings: "tnum" 1;
-          text-shadow: 0 0 16px rgba(251, 113, 133, 0.7);
-        }
-
-        .label {
-          margin-top: 8px;
-          font-size: clamp(10px, 1.8vw, 12px);
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          color: rgba(203, 213, 225, 0.75);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .timer-wrap.last-spurt .label {
-          color: rgba(253, 164, 175, 0.86);
-        }
-
-        .status {
-          margin-top: 18px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
-
-        .status-text {
-          margin: 0;
-          font-size: clamp(12px, 2vw, 14px);
-          color: rgba(226, 232, 240, 0.9);
-        }
-
-        .toggle {
-          border: 1px solid rgba(255, 255, 255, 0.24);
-          background: rgba(255, 255, 255, 0.08);
-          border-radius: 999px;
-          color: #e2e8f0;
-          padding: 8px 14px;
-          font-size: 12px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: 200ms ease;
-        }
-
-        .toggle:hover {
-          border-color: rgba(251, 113, 133, 0.75);
-          color: #ffe4e6;
-        }
-
-        .timer-wrap.last-spurt .toggle {
-          border-color: rgba(251, 113, 133, 0.55);
-          color: #ffe4e6;
-        }
-
-        @keyframes liquidGlow {
-          0% {
-            filter: blur(30px) brightness(2.5);
-            opacity: 0;
-            transform: scale(1.15);
-          }
-          50% {
-            filter: blur(12px) brightness(1.6);
-            opacity: 0.7;
-          }
-          100% {
-            filter: blur(0px) brightness(1);
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes heartbeat {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          12% {
-            transform: scale(1.06);
-          }
-          25% {
-            transform: scale(1.01);
-          }
-          35% {
-            transform: scale(1.1);
-          }
-        }
-
-        @media (max-width: 920px) {
-          .timer-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-        }
-
-        @media (max-width: 520px) {
-          .timer-wrap {
-            border-radius: 22px;
-          }
-
-          .timer-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-          }
-
-          .time-card {
-            border-radius: 16px;
-          }
-
-          .heading {
-            max-width: 15ch;
-          }
-        }
-      `}</style>
-
-      <main className="screen">
-        <section className={`timer-wrap ${inLastSpurt ? "last-spurt" : ""}`}>
-          <p className="eyebrow">Glassmorphism Countdown</p>
-          <h1 className="heading">Event Launch Countdown</h1>
-          <p className="caption">
-            {timeLeft.isOver
-              ? "The event has started."
-              : inLastSpurt
-                ? "Fever Mode: last hour activated"
-                : "Automatic Fever Mode when less than 1 hour remains"}
-          </p>
-
-          <div className="timer-grid" role="timer" aria-live="polite">
-            {cards.map((card, index) => {
-              const style: TimeCardInlineStyle = {
-                "--intro-delay": `${index * 0.08}s`,
-                "--beat-delay": `${index * 0.1}s`,
-              };
-
-              return (
-                <article key={card.label} className="time-card" style={style}>
-                <div className="value-line">
-                  <p className="value">{card.value}</p>
-                  {card.label === "SECONDS" && inLastSpurt ? (
-                    <span
-                      className="ms-inline"
-                      aria-label={`${pad(timeLeft.hundredths)} hundredths of a second`}
-                    >
-                      <span className="ms-dot">.</span>
-                      <span className="ms-value">{pad(timeLeft.hundredths)}</span>
-                    </span>
-                  ) : null}
-                </div>
-                <div className="label">{card.label}</div>
-              </article>
-              );
-            })}
-          </div>
-
-          <div className="status">
-            <p className="status-text">
-              {timeLeft.isOver
-                ? "00:00:00.00"
-                : `${pad(timeLeft.days)}d ${pad(timeLeft.hours)}h ${pad(timeLeft.minutes)}m ${pad(timeLeft.seconds)}s`}
-            </p>
-            <button type="button" className="toggle" onClick={() => setIsLastSpurt((prev) => !prev)}>
-              {isLastSpurt ? "Auto Last Spurt" : "Force Fever Mode"}
-            </button>
-          </div>
-        </section>
-      </main>
-    </>
+    <div className={`countdown-banner ${timeLeft.isLastSpurt ? "last-spurt" : ""}`}>
+      <span className="countdown-banner-label">5.30 RELEASE EVENT</span>
+      <div className="countdown-banner-timer" role="timer" aria-live="polite">
+        {[
+          { unit: "d", value: pad(timeLeft.days) },
+          { unit: "h", value: pad(timeLeft.hours) },
+          { unit: "m", value: pad(timeLeft.minutes) },
+          { unit: "s", value: pad(timeLeft.seconds) },
+        ].map((item, index) => (
+          <span key={item.unit} className="countdown-banner-segment">
+            <span
+              className="countdown-banner-num"
+              style={{ "--intro-delay": `${index * 0.07}s` } as React.CSSProperties}
+            >
+              {item.value}
+            </span>
+            <span className="countdown-banner-unit">{item.unit}</span>
+            {item.unit === "s" && timeLeft.isLastSpurt ? (
+              <span className="countdown-banner-ms">.{pad(timeLeft.hundredths)}</span>
+            ) : null}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
+
+function CountdownTimer() {
+  const timeLeft = useCountdown();
+
+  if (timeLeft.isOver) {
+    return (
+      <div className="countdown-container ended">
+        <span className="countdown-ended-text">RELEASE EVENT STARTED!</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`countdown-container ${timeLeft.isLastSpurt ? "last-spurt" : ""}`}>
+      <div className="countdown-label">COUNTDOWN TO EVENT</div>
+      <div className="countdown-grid" role="timer" aria-live="polite">
+        {[
+          { label: "DAYS", value: pad(timeLeft.days) },
+          { label: "HOURS", value: pad(timeLeft.hours) },
+          { label: "MINS", value: pad(timeLeft.minutes) },
+          { label: "SECS", value: pad(timeLeft.seconds) },
+        ].map((item, index) => (
+          <div
+            key={item.label}
+            className="countdown-item"
+            style={
+              {
+                "--intro-delay": `${index * 0.08}s`,
+                "--beat-delay": `${index * 0.1}s`,
+              } as React.CSSProperties
+            }
+          >
+            <div className="countdown-value-line">
+              <span className="countdown-num">{item.value}</span>
+              {item.label === "SECS" && timeLeft.isLastSpurt ? (
+                <span
+                  className="countdown-ms"
+                  aria-label={`${pad(timeLeft.hundredths)} hundredths of a second`}
+                >
+                  .{pad(timeLeft.hundredths)}
+                </span>
+              ) : null}
+            </div>
+            <span className="countdown-unit">{item.label}</span>
+          </div>
+        ))}
+      </div>
+      <p className="countdown-days-go">
+        {timeLeft.isLastSpurt
+          ? "FEVER MODE ACTIVE"
+          : `${timeLeft.days} ${timeLeft.days === 1 ? "day" : "days"} to go`}
+      </p>
+    </div>
+  );
+}
+
+function App() {
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [photoType, setPhotoType] = useState<'official' | 'special'>('official');
+
+  return (
+    <div className="page">
+      <CountdownBanner />
+
+      {/* ════════════════════════════════
+          HERO
+      ════════════════════════════════ */}
+      <section className="hero">
+        <div className="hero-bg-anim" />
+
+        {/* logo image */}
+        <div className="hero-logo-wrap">
+          <img
+            src={charImg}
+            alt="I.W.S.P. IKEBUKURO WHITE SCORPION PROJECT"
+            className="hero-logo-img"
+          />
+        </div>
+
+        <div className="hero-body">
+          {/* left: event info */}
+          <div className="hero-brand">
+            <div className="hero-event-label">
+              <span className="event-label-line">
+                WHITE SCORPION 8TH DIGITAL SINGLE
+              </span>
+              <span className="event-label-dash">—</span>
+              <span className="event-label-line">RELEASE EVENT</span>
+            </div>
+            <h1 className="hero-title">『7秒のレジスタンス』</h1>
+            <p className="hero-release-sub">リリースイベント</p>
+            <CountdownTimer />
+          </div>
+
+          {/* right: flyer */}
+          <div className="hero-poster">
+            <img src={flyerImg} alt="IWSP Flyer" className="flyer-img" />
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════
+          ARTIST STRIP
+      ════════════════════════════════ */}
+      <div className="artist-strip">
+        <img src={artistImg} alt="WHITE SCORPION" />
+        <div className="artist-strip-fade bottom" />
+      </div>
+
+      {/* ════════════════════════════════
+          MAIN CONTENT
+      ════════════════════════════════ */}
+      <main className="main">
+        {/* ── DATE & SCHEDULE ── */}
+        <section className="section">
+          <SectionLabel>DATE &amp; SCHEDULE</SectionLabel>
+
+          <div className="schedule-row">
+            <div className="schedule-date-block">
+              <span className="s-month">May</span>
+              <span className="s-day">30</span>
+            </div>
+            <div className="schedule-info">
+              <p className="s-year-dow">
+                <span className="s-year">2026</span>
+                <span className="s-dow">土曜日</span>
+              </p>
+              <p className="s-venue">
+                池袋西口公園野外劇場（グローバルリング シアター）
+              </p>
+            </div>
+          </div>
+
+          <div className="timeline">
+            <div className="tl-item">
+              <span className="tl-time">10:30</span>
+              <div className="tl-bar" />
+              <div className="tl-content">
+                <span className="tl-title">生写真販売 開始</span>
+              </div>
+            </div>
+            <div className="tl-item">
+              <span className="tl-time">16:00</span>
+              <div className="tl-bar" />
+              <div className="tl-content">
+                <span className="tl-title">ミニライブ</span>
+                <span className="tl-note">観覧無料・動員目標 3,000人</span>
+              </div>
+            </div>
+            <div className="tl-item">
+              <span className="tl-time">17:30</span>
+              <div className="tl-bar" />
+              <div className="tl-content">
+                <span className="tl-title">特典会 開始</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 来場者特典 ── */}
+        <section className="section">
+          <SectionLabel accent>来場者特典</SectionLabel>
+          <ul className="diamond-list">
+            <li>
+              来場者全員に撮り下ろし限定L判ハーフサイズ生写真（約1,000種）をランダムで1枚プレゼント
+            </li>
+            <li>5月6日 豊洲リリイベの引換券持参者は2枚</li>
+            <li>
+              友だち招待キャンペーン参加で招待者・友だち全員に「全員ハイタッチ会参加券」を1枚配布
+            </li>
+          </ul>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 特典会参加メンバー ── */}
+        <section className="section">
+          <SectionLabel accent>特典会参加メンバー</SectionLabel>
+          <div className="member-grid">
+            {memberList.map((member) => (
+              <div
+                key={member.name}
+                className={`member-card ${member.inactive ? "inactive" : ""}`}
+                style={{ "--col": member.color } as React.CSSProperties}
+                onClick={() => {
+                  setSelectedMember(member);
+                  setPhotoType('official');
+                }}
+              >
+                <div className="member-card-img-wrap">
+                  <img src={member.image} alt={member.name} loading="lazy" />
+                  {member.inactive && <span className="inactive-badge">休養中</span>}
+                </div>
+                <div className="member-card-info">
+                  <span className="member-card-name" style={{ color: member.color }}>{member.name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 対象商品 ── */}
+        <section className="section">
+          <SectionLabel accent>対象商品</SectionLabel>
+          <div className="product-card">
+            <div className="product-left">
+              <p className="product-name">ランダム生写真【8th衣装】</p>
+              <p className="product-note">
+                各5枚1セット・特典券1枚付き・当日商品・交換不可
+              </p>
+            </div>
+            <div className="product-price">¥1,650</div>
+          </div>
+          <div className="product-card">
+            <div className="product-left">
+              <p className="product-name">ランダム生写真【花柄】</p>
+              <p className="product-note">
+                各5枚1セット・特典券1枚付き・当日商品・交換不可
+              </p>
+            </div>
+            <div className="product-price">¥1,650</div>
+          </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 特典会内容 ── */}
+        <section className="section">
+          <SectionLabel accent>特典会内容</SectionLabel>
+          <div className="tokuten-grid">
+            {tokutenItems.map((item) => (
+              <div key={item.title} className="tokuten-card">
+                {item.ticket && (
+                  <span className="tokuten-ticket">{item.ticket}</span>
+                )}
+                <p className="tokuten-title">{item.title}</p>
+                <p className="tokuten-body">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── お支払い方法 ── */}
+        <section className="section">
+          <SectionLabel accent>お支払い方法</SectionLabel>
+          <div className="payment-row">
+            {payments.map((p) => (
+              <span key={p} className="payment-chip">
+                {p}
+              </span>
+            ))}
+          </div>
+          <p className="payment-note">
+            ※ QR決済はPayPayのみ対応&emsp;※
+            当日の電波状況等によりキャッシュレス不可の場合あり
+          </p>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 注意事項 ── */}
+        <section className="section">
+          <SectionLabel accent>注意事項</SectionLabel>
+          <ul className="notes-list">
+            {notes.map((n, i) => (
+              <li key={i}>{n}</li>
+            ))}
+          </ul>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 参考リンク ── */}
+        <section className="section">
+          <SectionLabel accent>公式お知らせ</SectionLabel>
+          <div className="ref-links">
+            <a
+              href="https://whitescorpion.jp/news/2026/04/23/9831/"
+              target="_blank"
+              rel="noreferrer"
+              className="ref-link"
+            >
+              <span className="ref-link-date">2026.04.23</span>
+              <span className="ref-link-label">イベント概要・特典会詳細</span>
+              <span className="ref-link-arrow">詳しくはこちら →</span>
+            </a>
+            <a
+              href="https://whitescorpion.jp/news/2026/05/12/10094/"
+              target="_blank"
+              rel="noreferrer"
+              className="ref-link"
+            >
+              <span className="ref-link-date">2026.05.12</span>
+              <span className="ref-link-label">追加・変更情報</span>
+              <span className="ref-link-arrow">詳しくはこちら →</span>
+            </a>
+          </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── お問い合わせ ── */}
+        <section className="section contact-section">
+          <SectionLabel accent>お問い合わせ</SectionLabel>
+          <a
+            href="https://whitescorpion.jp"
+            target="_blank"
+            rel="noreferrer"
+            className="contact-url"
+          >
+            whitescorpion.jp
+          </a>
+          <p className="contact-note">
+            公式サイトのお問い合わせフォームからのみ受付（電話対応なし）
+          </p>
+          <p className="contact-note">
+            土日祝・夜間のお問い合わせは翌営業日以降の返信
+          </p>
+        </section>
+      </main>
+
+      {/* ════════════════════════════════
+          FOOTER
+      ════════════════════════════════ */}
+      <footer className="footer">
+        <p className="footer-logo">I.W.S.P.</p>
+        <p className="footer-copy">© IKEBUKURO WHITE SCORPION PROJECT / MMM</p>
+      </footer>
+
+      {/* ── プロフィールモーダル ── */}
+      {selectedMember && (
+        <div className="profile-modal-overlay" onClick={() => setSelectedMember(null)}>
+          <div className="profile-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="profile-modal-close" onClick={() => setSelectedMember(null)}>✕</button>
+            <div className="profile-modal-body">
+              <div className="profile-modal-image-wrap">
+                <img
+                  src={photoType === 'official' ? selectedMember.image : selectedMember.specialImage}
+                  alt={selectedMember.name}
+                  className="modal-profile-img"
+                />
+                {selectedMember.inactive && <span className="modal-inactive-badge">休養中</span>}
+                
+                <div className="photo-switcher">
+                  <button
+                    className={`switcher-btn ${photoType === 'official' ? 'active' : ''}`}
+                    onClick={() => setPhotoType('official')}
+                    style={{ '--col': selectedMember.color } as React.CSSProperties}
+                  >
+                    7秒のレジスタンス
+                  </button>
+                  <button
+                    className={`switcher-btn ${photoType === 'special' ? 'active' : ''}`}
+                    onClick={() => setPhotoType('special')}
+                    style={{ '--col': selectedMember.color } as React.CSSProperties}
+                  >
+                    Corner of my heart
+                  </button>
+                </div>
+              </div>
+              <div className="profile-modal-info">
+                <h3 className="profile-modal-name" style={{ color: selectedMember.color }}>
+                  {selectedMember.name}
+                </h3>
+                <div className="profile-modal-meta">
+                  <div className="meta-item">
+                    <span className="meta-label">誕生日</span>
+                    <span className="meta-value">{selectedMember.birthday}</span>
+                  </div>
+                  <div className="meta-item">
+                    <span className="meta-label">出身地</span>
+                    <span className="meta-value">{selectedMember.birthplace}</span>
+                  </div>
+                  <div className="meta-item">
+                    <span className="meta-label">メンバーカラー</span>
+                    <span className="meta-value" style={{ color: selectedMember.color }}>
+                      {selectedMember.colorName}
+                    </span>
+                  </div>
+                </div>
+                <div className="profile-modal-message-box">
+                  <span className="message-title">MESSAGE</span>
+                  <p className="profile-modal-message">{selectedMember.message}</p>
+                </div>
+                <div className="profile-modal-sns">
+                  {selectedMember.sns.x && (
+                    <a href={selectedMember.sns.x} target="_blank" rel="noopener noreferrer" className="sns-btn x">
+                      X
+                    </a>
+                  )}
+                  {selectedMember.sns.instagram && (
+                    <a href={selectedMember.sns.instagram} target="_blank" rel="noopener noreferrer" className="sns-btn instagram">
+                      Instagram
+                    </a>
+                  )}
+                  {selectedMember.sns.tiktok && (
+                    <a href={selectedMember.sns.tiktok} target="_blank" rel="noopener noreferrer" className="sns-btn tiktok">
+                      TikTok
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
