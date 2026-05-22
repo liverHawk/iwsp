@@ -244,42 +244,102 @@ function SectionLabel({
   );
 }
 
-function CountdownTimer() {
-  const [timeLeft, setTimeLeft] = useState<{
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-    isOver: boolean;
-  }>({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: false });
+type CountdownState = {
+  totalMs: number;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  hundredths: number;
+  isOver: boolean;
+  isLastSpurt: boolean;
+};
+
+const LAST_SPURT_MS = 60 * 60 * 1000;
+
+const pad = (num: number) => String(num).padStart(2, "0");
+
+const createCountdownState = (target: number, forceLastSpurt = false): CountdownState => {
+  const now = new Date().getTime();
+  const difference = Math.max(0, target - now);
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((difference / (1000 * 60)) % 60);
+  const seconds = Math.floor((difference / 1000) % 60);
+  const hundredths = Math.floor((difference % 1000) / 10);
+  const isOver = difference <= 0;
+  const isLastSpurt = !isOver && (difference <= LAST_SPURT_MS || forceLastSpurt);
+
+  return {
+    totalMs: difference,
+    days,
+    hours,
+    minutes,
+    seconds,
+    hundredths,
+    isOver,
+    isLastSpurt,
+  };
+};
+
+function useCountdown(forceLastSpurt = false) {
+  const target = new Date("2026-05-30T10:30:00+09:00").getTime();
+  const [timeLeft, setTimeLeft] = useState<CountdownState>(() =>
+    createCountdownState(target, forceLastSpurt),
+  );
 
   useEffect(() => {
-    const target = new Date("2026-05-30T10:30:00+09:00").getTime();
+    const tick = () => setTimeLeft(createCountdownState(target, forceLastSpurt));
 
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const difference = target - now;
-
-      if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: true });
-        return true; // over
-      }
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / 1000 / 60) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
-
-      setTimeLeft({ days, hours, minutes, seconds, isOver: false });
-      return false;
-    };
-
-    const isOver = calculateTimeLeft();
-    if (isOver) return;
-
-    const interval = setInterval(calculateTimeLeft, 1000);
+    tick();
+    const interval = setInterval(tick, timeLeft.isLastSpurt ? 10 : 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [forceLastSpurt, target, timeLeft.isLastSpurt]);
+
+  return timeLeft;
+}
+
+function CountdownBanner() {
+  const timeLeft = useCountdown();
+
+  if (timeLeft.isOver) {
+    return (
+      <div className="countdown-banner ended">
+        <span className="countdown-banner-text">RELEASE EVENT STARTED!</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`countdown-banner ${timeLeft.isLastSpurt ? "last-spurt" : ""}`}>
+      <span className="countdown-banner-label">5.30 RELEASE EVENT</span>
+      <div className="countdown-banner-timer" role="timer" aria-live="polite">
+        {[
+          { unit: "d", value: pad(timeLeft.days) },
+          { unit: "h", value: pad(timeLeft.hours) },
+          { unit: "m", value: pad(timeLeft.minutes) },
+          { unit: "s", value: pad(timeLeft.seconds) },
+        ].map((item, index) => (
+          <span key={item.unit} className="countdown-banner-segment">
+            <span
+              className="countdown-banner-num"
+              style={{ "--intro-delay": `${index * 0.07}s` } as React.CSSProperties}
+            >
+              {item.value}
+            </span>
+            <span className="countdown-banner-unit">{item.unit}</span>
+            {item.unit === "s" && timeLeft.isLastSpurt ? (
+              <span className="countdown-banner-ms">.{pad(timeLeft.hundredths)}</span>
+            ) : null}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CountdownTimer() {
+  const timeLeft = useCountdown();
 
   if (timeLeft.isOver) {
     return (
@@ -289,36 +349,46 @@ function CountdownTimer() {
     );
   }
 
-  const pad = (num: number) => String(num).padStart(2, "0");
-
   return (
-    <div className="countdown-container">
-      <div className="countdown-label">
-        <span className="countdown-pulse-dot" />
-        COUNTDOWN TO EVENT
+    <div className={`countdown-container ${timeLeft.isLastSpurt ? "last-spurt" : ""}`}>
+      <div className="countdown-label">COUNTDOWN TO EVENT</div>
+      <div className="countdown-grid" role="timer" aria-live="polite">
+        {[
+          { label: "DAYS", value: pad(timeLeft.days) },
+          { label: "HOURS", value: pad(timeLeft.hours) },
+          { label: "MINS", value: pad(timeLeft.minutes) },
+          { label: "SECS", value: pad(timeLeft.seconds) },
+        ].map((item, index) => (
+          <div
+            key={item.label}
+            className="countdown-item"
+            style={
+              {
+                "--intro-delay": `${index * 0.08}s`,
+                "--beat-delay": `${index * 0.1}s`,
+              } as React.CSSProperties
+            }
+          >
+            <div className="countdown-value-line">
+              <span className="countdown-num">{item.value}</span>
+              {item.label === "SECS" && timeLeft.isLastSpurt ? (
+                <span
+                  className="countdown-ms"
+                  aria-label={`${pad(timeLeft.hundredths)} hundredths of a second`}
+                >
+                  .{pad(timeLeft.hundredths)}
+                </span>
+              ) : null}
+            </div>
+            <span className="countdown-unit">{item.label}</span>
+          </div>
+        ))}
       </div>
-      <div className="countdown-grid">
-        <div className="countdown-item">
-          <span className="countdown-num">{pad(timeLeft.days)}</span>
-          <span className="countdown-unit">DAYS</span>
-        </div>
-        <div className="countdown-colon">:</div>
-        <div className="countdown-item">
-          <span className="countdown-num">{pad(timeLeft.hours)}</span>
-          <span className="countdown-unit">HOURS</span>
-        </div>
-        <div className="countdown-colon">:</div>
-        <div className="countdown-item">
-          <span className="countdown-num">{pad(timeLeft.minutes)}</span>
-          <span className="countdown-unit">MINS</span>
-        </div>
-        <div className="countdown-colon">:</div>
-        <div className="countdown-item">
-          <span className="countdown-num">{pad(timeLeft.seconds)}</span>
-          <span className="countdown-unit">SECS</span>
-        </div>
-      </div>
-      <p className="countdown-days-go">{timeLeft.days} {timeLeft.days === 1 ? "day" : "days"} to go</p>
+      <p className="countdown-days-go">
+        {timeLeft.isLastSpurt
+          ? "FEVER MODE ACTIVE"
+          : `${timeLeft.days} ${timeLeft.days === 1 ? "day" : "days"} to go`}
+      </p>
     </div>
   );
 }
@@ -329,6 +399,8 @@ function App() {
 
   return (
     <div className="page">
+      <CountdownBanner />
+
       {/* ════════════════════════════════
           HERO
       ════════════════════════════════ */}
