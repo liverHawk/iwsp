@@ -36,7 +36,7 @@ const calculateTimeLeft = (targetTime: number): TimeLeft => {
 };
 
 const pad = (value: number) => String(value).padStart(2, "0");
-type TimeCardStyle = CSSProperties & Record<"--intro-delay" | "--beat-delay", string>;
+type TimeCardCSSProps = CSSProperties & Record<"--intro-delay" | "--beat-delay", string>;
 
 export default function App() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(TARGET_TIME));
@@ -393,7 +393,7 @@ export default function App() {
 
           <div className="timer-grid" role="timer" aria-live="polite">
             {cards.map((card, index) => {
-              const style: TimeCardStyle = {
+              const style: TimeCardCSSProps = {
                 "--intro-delay": `${index * 0.08}s`,
                 "--beat-delay": `${index * 0.1}s`,
               };
@@ -403,7 +403,10 @@ export default function App() {
                 <div className="value-line">
                   <p className="value">{card.value}</p>
                   {card.label === "SECONDS" && inLastSpurt ? (
-                    <span className="ms-inline" aria-label={`hundredths ${pad(timeLeft.hundredths)}`}>
+                    <span
+                      className="ms-inline"
+                      aria-label={`${pad(timeLeft.hundredths)} hundredths of a second`}
+                    >
                       <span className="ms-dot">.</span>
                       <span className="ms-value">{pad(timeLeft.hundredths)}</span>
                     </span>
