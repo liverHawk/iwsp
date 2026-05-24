@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import flyerImg from "./assets/flyer.jpg";
 import artistImg from "./assets/artist.jpg";
 import charImg from "./assets/char.png";
@@ -11,10 +11,65 @@ import { type Member, memberList, payments, tokutenItems, notes } from "./data/e
 import SectionLabel from "./components/SectionLabel";
 import CountdownTimer from "./components/CountdownTimer";
 import SiteHeader from "./components/SiteHeader";
+import CheerButton from "./components/CheerButton";
+
+const prefectureList = [
+  { id: "01", name: "北海道" }, { id: "02", name: "青森県" }, { id: "03", name: "岩手県" },
+  { id: "04", name: "宮城県" }, { id: "05", name: "秋田県" }, { id: "06", name: "山形県" },
+  { id: "07", name: "福島県" }, { id: "08", name: "茨城県" }, { id: "09", name: "栃木県" },
+  { id: "10", name: "群馬県" }, { id: "11", name: "埼玉県" }, { id: "12", name: "千葉県" },
+  { id: "13", name: "東京都" }, { id: "14", name: "神奈川県" }, { id: "15", name: "新潟県" },
+  { id: "16", name: "富山県" }, { id: "17", name: "石川県" }, { id: "18", name: "福井県" },
+  { id: "19", name: "山梨県" }, { id: "20", name: "長野県" }, { id: "21", name: "岐阜県" },
+  { id: "22", name: "静岡県" }, { id: "23", name: "愛知県" }, { id: "24", name: "三重県" },
+  { id: "25", name: "滋賀県" }, { id: "26", name: "京都府" }, { id: "27", name: "大阪府" },
+  { id: "28", name: "兵庫県" }, { id: "29", name: "奈良県" }, { id: "30", name: "和歌山県" },
+  { id: "31", name: "鳥取県" }, { id: "32", name: "島根県" }, { id: "33", name: "岡山県" },
+  { id: "34", name: "広島県" }, { id: "35", name: "山口県" }, { id: "36", name: "徳島県" },
+  { id: "37", name: "香川県" }, { id: "38", name: "愛媛県" }, { id: "39", name: "高知県" },
+  { id: "40", name: "福岡県" }, { id: "41", name: "佐賀県" }, { id: "42", name: "長崎県" },
+  { id: "43", name: "熊本県" }, { id: "44", name: "大分県" }, { id: "45", name: "宮崎県" },
+  { id: "46", name: "鹿児島県" }, { id: "47", name: "沖縄県" }
+];
 
 function App() {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [photoType, setPhotoType] = useState<'official' | 'special'>('official');
+
+  const [selectedPrefId, setSelectedPrefId] = useState<string>("");
+  const [prefectureCheers, setPrefectureCheers] = useState<number | null>(null);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!selectedPrefId) {
+      setPrefectureCheers(null);
+      return;
+    }
+
+    const fetchCheers = async () => {
+      setIsFetching(true);
+      try {
+        const response = await fetch(`/api/cheers?prefectureId=${selectedPrefId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setPrefectureCheers(data.count);
+        } else {
+          throw new Error("Failed to fetch cheers");
+        }
+      } catch (error) {
+        console.error(error);
+        setPrefectureCheers(0);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    fetchCheers();
+  }, [selectedPrefId]);
+
+  const handleSendSuccess = (addedCount: number) => {
+    setPrefectureCheers((prev) => (prev !== null ? prev + addedCount : addedCount));
+  };
 
   return (
     <div className="page">
@@ -156,6 +211,49 @@ function App() {
               </div>
             ))}
           </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ── 都道府県別 応援カウンター ── */}
+        <section className="section cheer-section-wrap">
+          <SectionLabel accent>都道府県別 応援カウンター</SectionLabel>
+          <p className="cheer-desc">あなたの住んでいる都道府県からメンバーへエールを送りましょう！</p>
+          
+          <div className="cheer-select-container">
+            <select 
+              className="cheer-select"
+              value={selectedPrefId} 
+              onChange={(e) => setSelectedPrefId(e.target.value)}
+            >
+              <option value="">都道府県を選択してください</option>
+              {prefectureList.map((pref) => (
+                <option key={pref.id} value={pref.id}>
+                  {pref.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedPrefId && (
+            <div className="cheer-active-container">
+              <div className="current-cheers-box">
+                <span className="current-cheers-label">現在の合計応援数</span>
+                {isFetching ? (
+                  <span className="current-cheers-value loading">Loading...</span>
+                ) : (
+                  <span className="current-cheers-value" key={prefectureCheers ?? 0}>
+                    {prefectureCheers !== null ? prefectureCheers.toLocaleString() : 0} <span className="unit">Cheers</span>
+                  </span>
+                )}
+              </div>
+
+              <CheerButton 
+                prefectureId={selectedPrefId} 
+                onSendSuccess={handleSendSuccess} 
+              />
+            </div>
+          )}
         </section>
 
         <hr className="rule" />

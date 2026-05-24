@@ -1434,4 +1434,110 @@ body {
     }
 }
 
+/* ── CHEER SECTION (PREFECTURAL CHEERS) ── */
+.cheer-section-wrap {
+    text-align: center;
+}
+
+.cheer-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    letter-spacing: 0.03em;
+    line-height: 1.6;
+}
+
+.cheer-select-container {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.cheer-select {
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-dim);
+    color: var(--text-bright);
+    border-radius: 12px;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    max-width: 320px;
+    transition: all 0.25s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888888'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 20px;
+}
+
+.cheer-select:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: var(--border);
+}
+
+.cheer-select:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 10px rgba(196, 23, 42, 0.2);
+}
+
+.cheer-active-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.current-cheers-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 20px 32px;
+    border-radius: 18px;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.current-cheers-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+}
+
+.current-cheers-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-bright);
+    line-height: 1;
+    text-shadow: 0 0 8px var(--red-glow);
+}
+
+.current-cheers-value.loading {
+    font-size: 20px;
+    color: var(--text-dim);
+    font-family: 'Outfit', sans-serif;
+    text-shadow: none;
+}
+
+.current-cheers-value .unit {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-left: 4px;
+    text-shadow: none;
+    text-transform: uppercase;
+}
+
+
 

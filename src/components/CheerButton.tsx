@@ -9,7 +9,12 @@ interface Particle {
   char: string;
 }
 
-export default function CheerButton() {
+interface CheerButtonProps {
+    prefectureId: string;
+    onSendSuccess: (addedCount: number) => void;
+}
+
+export default function CheerButton({ prefectureId, onSendSuccess }: CheerButtonProps) {
     const [count, setCount] = useState(0);
     const [timeLeft, setTimeLeft] = useState(0);
     const [sended, setSended] = useState(false);
@@ -19,14 +24,51 @@ export default function CheerButton() {
     const timeLeftRef = useRef(0);
     const intervalRef = useRef<number | null>(null);
 
+    // 都道府県が変更された場合に、状態をリセットする
     useEffect(() => {
-        if (timeLeft === 0 && sendBuffer.current > 0) {
-            setSended(true);
-            console.log(`sended at ${sendBuffer.current}`);
-
-            sendBuffer.current = 0;
+        setCount(0);
+        setTimeLeft(0);
+        setSended(false);
+        sendBuffer.current = 0;
+        timeLeftRef.current = 0;
+        if (intervalRef.current) {
+            window.clearInterval(intervalRef.current);
         }
-    }, [timeLeft]);
+    }, [prefectureId]);
+
+    useEffect(() => {
+        const sendCheers = async () => {
+            const countToSend = sendBuffer.current;
+            if (countToSend === 0) return;
+
+            // 送信前にバッファをクリア（二重送信防止）
+            sendBuffer.current = 0;
+            
+            try {
+                const response = await fetch("/api/cheers", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        prefectureId,
+                        count: countToSend,
+                    }),
+                });
+
+                if (response.ok) {
+                    setSended(true);
+                    onSendSuccess(countToSend);
+                } else {
+                    throw new Error("Failed to send cheers to API");
+                }
+            } catch (error) {
+                console.error("送信に失敗しました:", error);
+            }
+        };
+
+        if (timeLeft === 0 && sendBuffer.current > 0) {
+            sendCheers();
+        }
+    }, [timeLeft, prefectureId, onSendSuccess]);
 
     useEffect(() => {
         return () => {
@@ -37,7 +79,9 @@ export default function CheerButton() {
     }, []);
 
     const clickHandler = () => {
-        setSended(false);
+        // すでに送信完了している場合は処理を行わない
+        if (sended) return;
+
         timeLeftRef.current = 3;
         setTimeLeft(3);
 
