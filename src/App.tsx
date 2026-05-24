@@ -12,6 +12,7 @@ import SectionLabel from "./components/SectionLabel";
 import CountdownTimer from "./components/CountdownTimer";
 // import SiteHeader from "./components/SiteHeader";
 import CheerButton from "./components/CheerButton";
+import JapanMap from "./components/JapanMap";
 
 const prefectureList = [
   { id: "01", name: "北海道" }, { id: "02", name: "青森県" }, { id: "03", name: "岩手県" },
@@ -37,39 +38,46 @@ function App() {
   const [photoType, setPhotoType] = useState<'official' | 'special'>('official');
 
   const [selectedPrefId, setSelectedPrefId] = useState<string>("");
-  const [prefectureCheers, setPrefectureCheers] = useState<number | null>(null);
+  const [totalCheers, setTotalCheers] = useState<number>(0);
+  const [allPrefectureCheers, setAllPrefectureCheers] = useState<Record<string, number>>({});
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!selectedPrefId) {
-      setPrefectureCheers(null);
-      return;
-    }
-
-    const fetchCheers = async () => {
-      setIsFetching(true);
-      try {
-        const response = await fetch(`/api/cheers?prefectureId=${selectedPrefId}`);
-        if (response.ok) {
-          const data = await response.json();
-          setPrefectureCheers(data.count);
-        } else {
-          throw new Error("Failed to fetch cheers");
-        }
-      } catch (error) {
-        console.error(error);
-        setPrefectureCheers(0);
-      } finally {
-        setIsFetching(false);
+  // 全国の応援状況をバッチで取得する
+  const fetchAllCheers = async (showLoading = false) => {
+    if (showLoading) setIsFetching(true);
+    try {
+      const response = await fetch("/api/cheers");
+      if (response.ok) {
+        const data = await response.json();
+        setTotalCheers(data.total);
+        setAllPrefectureCheers(data.prefectures);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch all cheers:", error);
+    } finally {
+      if (showLoading) setIsFetching(false);
+    }
+  };
 
-    fetchCheers();
-  }, [selectedPrefId]);
+  // 初回マウント時および5秒おきの定期ポーリング
+  useEffect(() => {
+    fetchAllCheers(true);
+    const interval = setInterval(() => fetchAllCheers(false), 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSendSuccess = (addedCount: number) => {
-    setPrefectureCheers((prev) => (prev !== null ? prev + addedCount : addedCount));
+    // 即時反映（楽観的UI更新）
+    setTotalCheers((prev) => prev + addedCount);
+    if (selectedPrefId) {
+      setAllPrefectureCheers((prev) => ({
+        ...prev,
+        [selectedPrefId]: (prev[selectedPrefId] || 0) + addedCount,
+      }));
+    }
   };
+
+  const prefectureCheers = selectedPrefId ? (allPrefectureCheers[selectedPrefId] || 0) : null;
 
   return (
     <div className="page">
@@ -218,15 +226,33 @@ function App() {
         {/* ── 都道府県別 応援カウンター ── */}
         <section className="section cheer-section-wrap">
           <SectionLabel accent>都道府県別 応援カウンター</SectionLabel>
-          <p className="cheer-desc">あなたの住んでいる都道府県からメンバーへエールを送りましょう！</p>
+          <p className="cheer-desc">あなたの住んでいる都道府県からメンバーへエールを送りましょう！日本地図をクリックして都道府県を選択できます。</p>
           
+          {/* 全国合計応援数表示ボード */}
+          <div className="total-cheers-board">
+            <span className="total-cheers-title">🔥 全国合計応援数 🔥</span>
+            <h1 className="total-cheers-counter" key={totalCheers}>
+              {totalCheers.toLocaleString()} <span className="cheers-unit">Cheers</span>
+            </h1>
+            <p className="total-cheers-sub">みんなのエールがリアルタイムに集計中！</p>
+          </div>
+
+          {/* 日本地図ヒートマップ */}
+          <div className="map-display-container">
+            <JapanMap 
+              cheerData={allPrefectureCheers} 
+              selectedPrefId={selectedPrefId} 
+              onSelectPrefecture={(id) => setSelectedPrefId(id)} 
+            />
+          </div>
+
           <div className="cheer-select-container">
             <select 
               className="cheer-select"
               value={selectedPrefId} 
               onChange={(e) => setSelectedPrefId(e.target.value)}
             >
-              <option value="">都道府県を選択してください</option>
+              <option value="">都道府県を選択（または地図をクリック）</option>
               {prefectureList.map((pref) => (
                 <option key={pref.id} value={pref.id}>
                   {pref.name}
@@ -238,8 +264,10 @@ function App() {
           {selectedPrefId && (
             <div className="cheer-active-container">
               <div className="current-cheers-box">
-                <span className="current-cheers-label">現在の合計応援数</span>
-                {isFetching ? (
+                <span className="current-cheers-label">
+                  {prefectureList.find(p => p.id === selectedPrefId)?.name} の現在の応援数
+                </span>
+                {isFetching && prefectureCheers === null ? (
                   <span className="current-cheers-value loading">Loading...</span>
                 ) : (
                   <span className="current-cheers-value" key={prefectureCheers ?? 0}>
@@ -251,6 +279,7 @@ function App() {
               <CheerButton 
                 prefectureId={selectedPrefId} 
                 onSendSuccess={handleSendSuccess} 
+                key={selectedPrefId}
               />
             </div>
           )}

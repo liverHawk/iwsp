@@ -20,20 +20,29 @@ const db = drizzle({ connection: {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const prefectureId = req.query.prefectureId as string || req.body?.prefectureId;
 
-    if (!prefectureId) {
-        return res.status(400).json({ error: "prefectureId is required" });
-    }
-
     try {
         // 1. GETリクエスト：現在の応援数を取得して返す
         if (req.method === "GET") {
-            const result = await db.select().from(cheers).where(eq(cheers.id, prefectureId)).limit(1);
-            const count = result.length > 0 ? result[0].count : 0;
-            return res.status(200).json({ count });
+            if (prefectureId) {
+                const result = await db.select().from(cheers).where(eq(cheers.id, prefectureId)).limit(1);
+                const count = result.length > 0 ? result[0].count : 0;
+                return res.status(200).json({ count });
+            } else {
+                const allCheers = await db.select().from(cheers);
+                const total = allCheers.reduce((sum, item) => sum + item.count, 0);
+                const prefectures = allCheers.reduce((acc, item) => {
+                    acc[item.id] = item.count;
+                    return acc;
+                }, {} as Record<string, number>);
+                return res.status(200).json({ total, prefectures });
+            }
         }
 
         // 2. POSTリクエスト：応援数を加算更新する
         if (req.method === "POST") {
+            if (!prefectureId) {
+                return res.status(400).json({ error: "prefectureId is required" });
+            }
             const count = Number(req.body.count || 1);
             
             await db

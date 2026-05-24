@@ -1539,5 +1539,71 @@ body {
     text-transform: uppercase;
 }
 
+/* ── TOTAL CHEERS BOARD & MAP DISPLAY ── */
+.total-cheers-board {
+    background: linear-gradient(135deg, rgba(139, 15, 29, 0.15) 0%, rgba(8, 8, 8, 0.4) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 32px;
+    box-shadow: 0 8px 32px rgba(196, 23, 42, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+}
+
+.total-cheers-title {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.total-cheers-counter {
+    font-family: 'Bebas Neue', 'Outfit', sans-serif;
+    font-size: clamp(36px, 8vw, 56px);
+    font-weight: 800;
+    color: #ff9f43; /* ゴールドネオン */
+    line-height: 1.1;
+    text-shadow: 0 0 20px rgba(255, 159, 67, 0.6);
+    margin-bottom: 6px;
+    animation: counter-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes counter-pop {
+    0% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.total-cheers-counter .cheers-unit {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-left: 6px;
+    text-shadow: none;
+    text-transform: uppercase;
+}
+
+.total-cheers-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+}
+
+.map-display-container {
+    margin: 24px auto 32px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 
 
