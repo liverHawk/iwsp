@@ -3,14 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.x"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.3",
+    "@vercel/node": "^5.8.4",
     "@vercel/speed-insights": "^2.0.0",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "drizzle-seed": "^0.3.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
@@ -24,10 +33,12 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "tsx": "^4.22.3",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12"
