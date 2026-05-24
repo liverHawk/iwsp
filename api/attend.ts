@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { drizzle } from "drizzle-orm/libsql";
 import { eq } from "drizzle-orm";
 import { attendees } from "../src/db/schema";
-import { auth } from "./_auth";
+import { getAuthInstance } from "./_auth";
 import crypto from "crypto";
 
 // Turso データベース接続を初期化
@@ -19,6 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     try {
         // Better Auth セッションを検証
+        const auth = getAuthInstance();
         const session = await auth.api.getSession({
             headers: req.headers
         });
@@ -51,8 +52,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // すでに登録されている場合
         return res.status(200).json({ success: true, registered: false, message: "Already registered" });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Attend API error:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error", message: error.message });
     }
 }
