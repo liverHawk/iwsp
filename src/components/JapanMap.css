@@ -1,0 +1,99 @@
+.japan-map-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: rgba(20, 20, 30, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  overflow: hidden;
+}
+
+.geolonia-svg-map {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+}
+
+/* 都道府県グループのスタイル */
+.prefecture {
+  outline: none;
+}
+
+.prefecture polygon,
+.prefecture path {
+  transition: fill 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              stroke 0.3s ease, 
+              stroke-width 0.3s ease;
+}
+
+/* ホバー時の挙動 */
+.prefecture:hover polygon,
+.prefecture:hover path {
+  filter: brightness(1.25) saturate(1.2);
+  stroke: #ffffff !important;
+  stroke-width: 1.8px !important;
+}
+
+/* 選択されている都道府県 */
+.prefecture.selected polygon,
+.prefecture.selected path {
+  filter: brightness(1.35) saturate(1.4) drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
+  stroke: #00f2fe !important;
+  stroke-width: 2.2px !important;
+}
+
+/* 境界線のスタイル調整 */
+.boundary-line line {
+  pointer-events: none;
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 3px;
+}
+
+/* ツールチップのスタイリング */
+.japan-map-tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  padding: 10px 14px;
+  background: rgba(10, 10, 18, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9rem;
+  backdrop-filter: blur(8px);
+  transform: translate(0, 0);
+  transition: opacity 0.15s ease;
+  min-width: 120px;
+}
+
+.tooltip-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, #ffffff, #a5b1c2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tooltip-count {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.tooltip-count .count-num {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ff9f43; /* ゴールド系のネオンカラー */
+  text-shadow: 0 0 10px rgba(255, 159, 67, 0.4);
+}
