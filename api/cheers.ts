@@ -1,7 +1,14 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { drizzle } from "drizzle-orm/libsql";
 import { eq, sql } from "drizzle-orm";
-import { cheers } from "../src/db/schema";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+
+const cheers = sqliteTable("cheers", {
+    id: text("id").primaryKey(),
+    prefecture: text("prefecture").notNull(),
+    count: integer("count").default(0).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }),
+});
 
 // Turso データベース接続を初期化
 // 環境変数はサーバーサイド（Vercel）でのみ読まれます
