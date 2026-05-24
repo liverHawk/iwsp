@@ -58,7 +58,6 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
                 });
 
                 if (response.ok) {
-                    setSent(false);
                     onSendSuccess(countToSend);
                 } else {
                     throw new Error("Failed to send cheers to API");
