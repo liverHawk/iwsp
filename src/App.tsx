@@ -10,7 +10,7 @@ import { type Member, memberList, payments, tokutenItems, notes } from "./data/e
 // Component Imports
 import SectionLabel from "./components/SectionLabel";
 import CountdownTimer from "./components/CountdownTimer";
-import SiteHeader from "./components/SiteHeader";
+// import SiteHeader from "./components/SiteHeader";
 import CheerButton from "./components/CheerButton";
 
 const prefectureList = [
