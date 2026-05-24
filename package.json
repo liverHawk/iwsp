@@ -7,13 +7,15 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.3",
     "@vercel/speed-insights": "^2.0.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
+    "drizzle-seed": "^0.3.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },

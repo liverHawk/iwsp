@@ -6,3 +6,6 @@ export const cheers = sqliteTable("cheers", {
     count: integer("count").default(0).notNull(),
     updatedAt: integer("updated_at", { mode: "timestamp" })
 });
+
+export type InsertPrefecture = typeof cheers.$inferInsert;
+export type SelectPrefecture = typeof cheers.$inferSelect;
