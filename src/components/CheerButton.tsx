@@ -65,6 +65,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
                 }
             } catch (error) {
                 console.error("送信に失敗しました:", error);
+                setSent(false);
             }
         };
 
@@ -126,7 +127,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
     };
 
     // 残り時間（3〜0秒）に基づくプログレスバーの幅
-    const progressWidth = `${(timeLeft / (WAIT_MINUTES - 1)) * 100}%`;
+    const progressWidth = `${((timeLeft - 1) / (WAIT_MINUTES - 1)) * 100}%`;
 
     return (
         <div className="cheer-container">
