@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import "./CheerButton.css";
 
+const WAIT_MINUTES = 3
+
 interface Particle {
   id: number;
   x: number;
@@ -17,7 +19,7 @@ interface CheerButtonProps {
 export default function CheerButton({ prefectureId, onSendSuccess }: CheerButtonProps) {
     const [count, setCount] = useState(0);
     const [timeLeft, setTimeLeft] = useState(0);
-    const [sended, setSended] = useState(false);
+    const [sent, setSent] = useState(false);
     const [particles, setParticles] = useState<Particle[]>([]);
 
     const sendBuffer = useRef(0);
@@ -28,7 +30,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
     useEffect(() => {
         setCount(0);
         setTimeLeft(0);
-        setSended(false);
+        setSent(false);
         sendBuffer.current = 0;
         timeLeftRef.current = 0;
         if (intervalRef.current) {
@@ -38,6 +40,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
 
     useEffect(() => {
         const sendCheers = async () => {
+            setSent(true);
             const countToSend = sendBuffer.current;
             if (countToSend === 0) return;
 
@@ -55,7 +58,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
                 });
 
                 if (response.ok) {
-                    setSended(true);
+                    setSent(false);
                     onSendSuccess(countToSend);
                 } else {
                     throw new Error("Failed to send cheers to API");
@@ -80,10 +83,10 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
 
     const clickHandler = () => {
         // すでに送信完了している場合は処理を行わない
-        if (sended) return;
+        if (sent) return;
 
-        timeLeftRef.current = 3;
-        setTimeLeft(3);
+        timeLeftRef.current = WAIT_MINUTES;
+        setTimeLeft(WAIT_MINUTES);
 
         setCount((prev) => prev + 1);
         sendBuffer.current += 1;
@@ -123,7 +126,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
     };
 
     // 残り時間（3〜0秒）に基づくプログレスバーの幅
-    const progressWidth = `${(timeLeft / 3) * 100}%`;
+    const progressWidth = `${(timeLeft / (WAIT_MINUTES - 1)) * 100}%`;
 
     return (
         <div className="cheer-container">
@@ -159,7 +162,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
                 )}
             </div>
 
-            <button className="cheer-btn-main" onClick={clickHandler} disabled={sended}>
+            <button className="cheer-btn-main" onClick={clickHandler} disabled={sent}>
                 Cheer!!
             </button>
 
@@ -179,12 +182,12 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
             ))}
 
             <div className="status-badge-wrap">
-                {sended && (
-                    <span className="status-badge sended">
+                {sent && (
+                    <span className="status-badge sent">
                         ✓ Sent to Database
                     </span>
                 )}
-                {!sended && timeLeft > 0 && (
+                {!sent && timeLeft > 0 && (
                     <span className="status-badge waiting">
                         ⚡ Buffering...
                     </span>
