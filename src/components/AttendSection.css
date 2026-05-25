@@ -1,0 +1,444 @@
+/* AttendSection.css */
+
+.attend-section-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.attend-container {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 30px;
+  perspective: 1000px;
+}
+
+/* 参加表明 統計掲示ボード */
+.attend-stats-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.stat-item.total-stats {
+  background: rgba(25, 4, 6, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(219, 30, 51, 0.2);
+  border-radius: 16px;
+  padding: 16px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4),
+              inset 0 0 10px rgba(255, 255, 255, 0.02);
+  width: auto;
+  min-width: 240px;
+}
+
+.stat-item .stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stat-count-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.stat-item .stat-number {
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #ffffff 40%, #ff8896 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(219, 30, 51, 0.3));
+}
+
+.stat-item .stat-unit {
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.stat-item.recent-stats {
+  background: rgba(219, 30, 51, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(219, 30, 51, 0.35);
+  border-radius: 50px;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  color: #ff8896;
+  box-shadow: 0 4px 15px rgba(219, 30, 51, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.recent-stats .fire-icon {
+  font-size: 1.1rem;
+}
+
+.recent-stats strong {
+  color: #ffffff;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(219, 30, 51, 0.6);
+}
+
+/* カード共通 */
+.attend-card {
+  background: rgba(20, 3, 5, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(219, 30, 51, 0.25);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 
+              inset 0 0 15px rgba(255, 255, 255, 0.03);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+              box-shadow 0.4s ease, 
+              border-color 0.4s ease;
+}
+
+.attend-card:hover {
+  border-color: rgba(219, 30, 51, 0.45);
+  box-shadow: 0 20px 45px rgba(219, 30, 51, 0.15), 
+              0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+/* タイトル & 説明文 */
+.attend-form-title, .attend-status-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #ffffff 30%, #f3a6b2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.attend-form-desc, .attend-status-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* フォーム要素 */
+.attend-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.03em;
+  text-align: left;
+}
+
+.form-input {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  outline: none;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  border-color: #DB1E33;
+  box-shadow: 0 0 15px rgba(219, 30, 51, 0.4), 
+              inset 0 0 6px rgba(219, 30, 51, 0.2);
+  background: rgba(15, 2, 4, 0.7);
+}
+
+.form-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* カレンダー入力のアイコン色 */
+.form-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.form-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* 送信ボタン */
+.attend-submit-btn {
+  background: linear-gradient(135deg, #DB1E33 0%, #A50819 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(219, 30, 51, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.05em;
+}
+
+.attend-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff2c46 0%, #DB1E33 100%);
+  box-shadow: 0 8px 25px rgba(219, 30, 51, 0.55);
+  transform: translateY(-2px);
+}
+
+.attend-submit-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 3px 10px rgba(219, 30, 51, 0.4);
+}
+
+.attend-submit-btn:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ローディングスピナー */
+.spinner-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* エラーメッセージ */
+.attend-error-msg {
+  background: rgba(219, 30, 51, 0.12);
+  border: 1px solid rgba(219, 30, 51, 0.35);
+  color: #ff8896;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: left;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* 登録成功カード */
+.registered-card {
+  text-align: center;
+  border-color: rgba(46, 213, 115, 0.35);
+}
+
+.registered-card:hover {
+  border-color: rgba(46, 213, 115, 0.55);
+  box-shadow: 0 20px 45px rgba(46, 213, 115, 0.1), 
+              0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+.registered-badge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.success-icon-ring {
+  width: 60px;
+  height: 60px;
+  background: rgba(46, 213, 115, 0.15);
+  border: 2px solid #2ed573;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 0 15px rgba(46, 213, 115, 0.3);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 0 0 rgba(46, 213, 115, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(46, 213, 115, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 213, 115, 0); }
+}
+
+.success-icon {
+  font-size: 26px;
+  color: #2ed573;
+  font-weight: bold;
+}
+
+.attend-status-title {
+  background: linear-gradient(135deg, #ffffff 40%, #a2ffd0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0;
+}
+
+.attend-hash-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.hash-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.hash-value {
+  font-size: 1.1rem;
+  font-family: monospace;
+  color: #a2ffd0;
+  letter-spacing: 0.05em;
+}
+
+.success-banner {
+  background: rgba(46, 213, 115, 0.12);
+  border: 1px solid rgba(46, 213, 115, 0.3);
+  color: #a2ffd0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.attend-reset-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.attend-reset-btn:hover {
+  background: rgba(219, 30, 51, 0.1);
+  border-color: rgba(219, 30, 51, 0.5);
+  color: #ff8896;
+}
+
+/* アニメーション */
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* パルスアニメーション */
+.animate-pulse-neon {
+  animation: pulse-neon 2s infinite ease-in-out;
+}
+
+@keyframes pulse-neon {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(219, 30, 51, 0.15);
+    border-color: rgba(219, 30, 51, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(219, 30, 51, 0.45);
+    border-color: rgba(219, 30, 51, 0.75);
+    transform: scale(1.02);
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 600px) {
+  .attend-card {
+    padding: 24px 20px;
+  }
+  
+  .attend-form-title, .attend-status-title {
+    font-size: 1.5rem;
+  }
+  
+  .attend-form-desc, .attend-status-desc {
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+  }
+  
+  .form-input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .stat-item.total-stats {
+    padding: 12px 30px;
+    min-width: 200px;
+  }
+
+  .stat-item .stat-number {
+    font-size: 2rem;
+  }
+}
