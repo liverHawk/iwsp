@@ -76,7 +76,7 @@ export default function AttendSection() {
 
     // バリデーション
     if (!name.trim()) {
-      setErrorMsg("お名前を入力してください。");
+      setErrorMsg("ニックネームを入力してください。");
       return;
     }
     if (!birthday) {
@@ -136,7 +136,7 @@ export default function AttendSection() {
 
   return (
     <section className="section attend-section-wrap" id="attendance-section">
-      <SectionLabel accent>事前参加表明</SectionLabel>
+      <SectionLabel accent>事前参加表明 （非公式）</SectionLabel>
       
       <div className="attend-container">
         {/* 参加表明の統計掲示ボード */}
@@ -190,16 +190,16 @@ export default function AttendSection() {
         ) : (
           /* 未登録状態のUI（入力フォーム） */
           <div className="attend-card form-card">
-            <h3 className="attend-form-title">事前参加表明フォーム</h3>
+            <h3 className="attend-form-title">参加表明</h3>
             <p className="attend-form-desc">
-              イベント当日の動員目標3,000人達成に向けて、事前参加表明にご協力ください。<br />
+              イベント当日の動員目標3,000人達成に向けて、事前に参加表明をしよう！<br />
               入力された個人情報はサーバー側で暗号化（ハッシュ化）され、厳重に管理されます。
             </p>
 
             <form onSubmit={handleSubmit} className="attend-form">
               <div className="form-group">
                 <label htmlFor="attendee-name" className="form-label">
-                  お名前（フルネーム）
+                  ニックネーム
                 </label>
                 <input
                   id="attendee-name"
