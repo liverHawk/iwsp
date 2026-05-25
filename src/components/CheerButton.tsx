@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./CheerButton.css";
 
-const WAIT_MINUTES = 3
+const WAIT_SECONDS = 7;
 
 interface Particle {
   id: number;
@@ -85,8 +85,8 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
         // すでに送信完了している場合は処理を行わない
         if (sent) return;
 
-        timeLeftRef.current = WAIT_MINUTES;
-        setTimeLeft(WAIT_MINUTES);
+        timeLeftRef.current = WAIT_SECONDS;
+        setTimeLeft(WAIT_SECONDS);
 
         setCount((prev) => prev + 1);
         sendBuffer.current += 1;
@@ -126,7 +126,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
     };
 
     // 残り時間（3〜0秒）に基づくプログレスバーの幅
-    const progressWidth = `${((timeLeft - 1) / (WAIT_MINUTES - 1)) * 100}%`;
+    const progressWidth = `${((timeLeft - 1) / (WAIT_SECONDS - 1)) * 100}%`;
 
     return (
         <div className="cheer-container">
@@ -151,7 +151,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
             <div className="timer-section">
                 {timeLeft > 0 && (
                     <>
-                        <span className="timer-text">Sending in {timeLeft}s...</span>
+                        <span className="timer-text">７秒間お待ちください (残り{timeLeft}s)</span>
                         <div className="timer-bar-container">
                             <div 
                                 className="timer-bar" 

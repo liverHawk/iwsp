@@ -97,3 +97,33 @@
   color: #ff9f43; /* ゴールド系のネオンカラー */
   text-shadow: 0 0 10px rgba(255, 159, 67, 0.4);
 }
+
+/* ── MEMBER INTEGRATION HIGHLIGHTS ── */
+g.prefecture[data-member-hovered="true"] polygon,
+g.prefecture[data-member-hovered="true"] path {
+  filter: brightness(1.25) saturate(1.3) drop-shadow(0 0 10px var(--member-color));
+  stroke: var(--member-color) !important;
+  stroke-width: 2px !important;
+  animation: pref-pulse 1.5s infinite ease-in-out;
+}
+
+g.prefecture[data-member-selected="true"] polygon,
+g.prefecture[data-member-selected="true"] path {
+  filter: brightness(1.35) saturate(1.5) drop-shadow(0 0 15px var(--member-color));
+  stroke: var(--member-color) !important;
+  stroke-width: 2.5px !important;
+  animation: pref-pulse 2.0s infinite ease-in-out;
+}
+
+@keyframes pref-pulse {
+  0% {
+    filter: brightness(1.1) saturate(1.1) drop-shadow(0 0 3px var(--member-color));
+  }
+  50% {
+    filter: brightness(1.4) saturate(1.5) drop-shadow(0 0 15px var(--member-color));
+  }
+  100% {
+    filter: brightness(1.1) saturate(1.1) drop-shadow(0 0 3px var(--member-color));
+  }
+}
+

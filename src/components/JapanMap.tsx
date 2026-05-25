@@ -1,13 +1,24 @@
 import React, { useState } from "react";
 import "./JapanMap.css";
+import { memberList } from "../data/eventData";
 
 interface JapanMapProps {
   cheerData: Record<string, number>;
   selectedPrefId: string;
   onSelectPrefecture: (id: string) => void;
+  hoveredPrefId?: string;
+  selectedMemberPrefId?: string;
+  selectedMemberColor?: string;
 }
 
-export default function JapanMap({ cheerData, selectedPrefId, onSelectPrefecture }: JapanMapProps) {
+export default function JapanMap({ 
+  cheerData, 
+  selectedPrefId, 
+  onSelectPrefecture,
+  hoveredPrefId = "",
+  selectedMemberPrefId = "",
+  selectedMemberColor = ""
+}: JapanMapProps) {
   const [tooltip, setTooltip] = useState<{
     show: boolean;
     x: number;
@@ -22,6 +33,18 @@ export default function JapanMap({ cheerData, selectedPrefId, onSelectPrefecture
 
   // 都道府県コードに基づいて色を決定
   const getPrefColor = (code: string) => {
+    // 1. 選択中メンバーの出身地ハイライト
+    if (selectedMemberPrefId === code && selectedMemberColor) {
+      return `${selectedMemberColor}cc`;
+    }
+    // 2. ホバー中メンバーの出身地ハイライト
+    if (hoveredPrefId === code) {
+      const hoverMember = memberList.find(m => m.prefectureId === code);
+      if (hoverMember) {
+        return `${hoverMember.color}cc`;
+      }
+    }
+
     const count = cheerData[code] || 0;
     if (count === 0) {
       return "rgba(255, 255, 255, 0.04)"; // 応援数0は暗めのスケルトンホワイト
@@ -39,11 +62,14 @@ export default function JapanMap({ cheerData, selectedPrefId, onSelectPrefecture
 
   const handleMouseEnter = (e: React.MouseEvent<SVGElement>, code: string, name: string) => {
     const count = cheerData[code] || 0;
+    const members = memberList.filter(m => m.prefectureId === code);
+    const memberNames = members.map(m => m.name).join(", ");
+    
     setTooltip({
       show: true,
       x: e.clientX,
       y: e.clientY,
-      name,
+      name: memberNames ? `${name} (${memberNames} 出身)` : name,
       count,
     });
   };
@@ -62,11 +88,46 @@ export default function JapanMap({ cheerData, selectedPrefId, onSelectPrefecture
 
   const getPrefProps = (code: string, name: string) => {
     const isSelected = selectedPrefId === code;
+    const isMemberHovered = hoveredPrefId === code;
+    const isMemberSelected = selectedMemberPrefId === code;
+
+    let stroke = "rgba(255, 255, 255, 0.15)";
+    let strokeWidth = 0.8;
+
+    if (isSelected) {
+      stroke = "#00f2fe";
+      strokeWidth = 2.5;
+    } else if (isMemberSelected && selectedMemberColor) {
+      stroke = selectedMemberColor;
+      strokeWidth = 2.0;
+    } else if (isMemberHovered) {
+      const hoverMember = memberList.find(m => m.prefectureId === code);
+      if (hoverMember) {
+        stroke = hoverMember.color;
+        strokeWidth = 2.0;
+      }
+    } else {
+      // メンバー出身地はデフォルトで境界線を少しゴールドにして目立たせる
+      const hasMember = memberList.some(m => m.prefectureId === code);
+      if (hasMember) {
+        stroke = "rgba(255, 215, 0, 0.4)";
+        strokeWidth = 1.2;
+      }
+    }
+
+    const hoverMemberColor = memberList.find(m => m.prefectureId === code)?.color;
+
     return {
       fill: getPrefColor(code),
-      stroke: isSelected ? "#00f2fe" : "rgba(255, 255, 255, 0.15)", // 選択中はサイバー水色に発光
-      strokeWidth: isSelected ? 2.5 : 0.8,
-      style: { cursor: "pointer", transition: "fill 0.3s, stroke 0.3s" },
+      stroke,
+      strokeWidth,
+      "data-member-selected": isMemberSelected ? "true" : undefined,
+      "data-member-hovered": isMemberHovered ? "true" : undefined,
+      style: { 
+        cursor: "pointer", 
+        transition: "fill 0.3s, stroke 0.3s, stroke-width 0.3s",
+        "--member-color": isMemberSelected ? selectedMemberColor : (isMemberHovered ? hoverMemberColor : undefined)
+      } as React.CSSProperties,
       onClick: () => onSelectPrefecture(code),
       onMouseEnter: (e: React.MouseEvent<SVGElement>) => handleMouseEnter(e, code, name),
       onMouseMove: handleMouseMove,
