@@ -39,9 +39,13 @@ function App() {
   const [photoType, setPhotoType] = useState<'official' | 'special'>('official');
 
   const [selectedPrefId, setSelectedPrefId] = useState<string>("");
+  const [hoveredPrefId, setHoveredPrefId] = useState<string>("");
   const [totalCheers, setTotalCheers] = useState<number>(0);
   const [allPrefectureCheers, setAllPrefectureCheers] = useState<Record<string, number>>({});
   const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  const selectedMemberPrefId = selectedMember ? selectedMember.prefectureId : "";
+  const selectedMemberColor = selectedMember ? selectedMember.color : "";
 
   // 全国の応援状況をバッチで取得する
   const fetchAllCheers = async (showLoading = false) => {
@@ -214,10 +218,15 @@ function App() {
                   setSelectedMember(member);
                   setPhotoType('official');
                 }}
+                onMouseEnter={() => !member.inactive && setHoveredPrefId(member.prefectureId)}
+                onMouseLeave={() => setHoveredPrefId("")}
               >
                 <div className="member-card-img-wrap">
                   <img src={member.image} alt={member.name} loading="lazy" />
                   {member.inactive && <span className="inactive-badge">休養中</span>}
+                  <span className="member-card-pref" style={{ backgroundColor: `${member.color}cc` }}>
+                    {member.birthplace}
+                  </span>
                 </div>
                 <div className="member-card-info">
                   <span className="member-card-name" style={{ color: member.color }}>{member.name}</span>
@@ -249,6 +258,9 @@ function App() {
               cheerData={allPrefectureCheers} 
               selectedPrefId={selectedPrefId} 
               onSelectPrefecture={(id) => setSelectedPrefId(id)} 
+              hoveredPrefId={hoveredPrefId}
+              selectedMemberPrefId={selectedMemberPrefId}
+              selectedMemberColor={selectedMemberColor}
             />
           </div>
 
@@ -259,16 +271,38 @@ function App() {
               onChange={(e) => setSelectedPrefId(e.target.value)}
             >
               <option value="">都道府県を選択（または地図をクリック）</option>
-              {prefectureList.map((pref) => (
-                <option key={pref.id} value={pref.id}>
-                  {pref.name}
-                </option>
-              ))}
+              {prefectureList.map((pref) => {
+                const members = memberList.filter(m => m.prefectureId === pref.id);
+                const memberNames = members.map(m => m.name).join(", ");
+                const label = memberNames ? `${pref.name} (${memberNames} 出身)` : pref.name;
+                return (
+                  <option key={pref.id} value={pref.id}>
+                    {label}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
           {selectedPrefId && (
             <div className="cheer-active-container">
+              {(() => {
+                const prefName = prefectureList.find(p => p.id === selectedPrefId)?.name;
+                const members = memberList.filter(m => m.birthplace === prefName);
+                if (members.length > 0) {
+                  return (
+                    <div className="pref-member-notice" style={{ "--pref-col": members[0].color } as React.CSSProperties}>
+                      <span className="notice-icon">🎉</span>
+                      <span className="notice-text">
+                        {members.map(m => m.name).join(" & ")} の出身地です！応援しましょう！
+                      </span>
+                      <span className="notice-icon">🎉</span>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
               <div className="current-cheers-box">
                 <span className="current-cheers-label">
                   {prefectureList.find(p => p.id === selectedPrefId)?.name} の現在の応援数
@@ -465,7 +499,9 @@ function App() {
                   </div>
                   <div className="meta-item">
                     <span className="meta-label">出身地</span>
-                    <span className="meta-value">{selectedMember.birthplace}</span>
+                    <span className="meta-value pref-badge" style={{ backgroundColor: `${selectedMember.color}22`, color: selectedMember.color, borderColor: selectedMember.color }}>
+                      📍 {selectedMember.birthplace}
+                    </span>
                   </div>
                   <div className="meta-item">
                     <span className="meta-label">メンバーカラー</span>
