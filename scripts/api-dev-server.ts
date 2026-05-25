@@ -6,7 +6,8 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
 // ハンドラーを動的にインポート
-const handler = (await import("../api/cheers")).default;
+const cheersHandler = (await import("../api/cheers")).default;
+const attendanceHandler = (await import("../api/attendance")).default;
 
 const server = http.createServer((req, res) => {
     // CORSヘッダーを付与
@@ -21,6 +22,7 @@ const server = http.createServer((req, res) => {
     }
 
     const parsedUrl = url.parse(req.url || "", true);
+    const pathname = parsedUrl.pathname;
     const query = parsedUrl.query;
 
     let bodyRaw = "";
@@ -55,9 +57,17 @@ const server = http.createServer((req, res) => {
             return vercelRes;
         };
 
+        // リクエストのパスに応じて呼び出すハンドラーを切り替える
         try {
-            // api/cheers.ts のハンドラーを直接呼び出す
-            await handler(vercelReq, vercelRes);
+            if (pathname === "/api/cheers") {
+                await cheersHandler(vercelReq, vercelRes);
+            } else if (pathname === "/api/attendance") {
+                await attendanceHandler(vercelReq, vercelRes);
+            } else {
+                res.statusCode = 404;
+                res.setHeader("Content-Type", "application/json");
+                res.end(JSON.stringify({ error: `Not Found: ${pathname}` }));
+            }
         } catch (error) {
             console.error("ハンドラー実行エラー:", error);
             res.statusCode = 500;

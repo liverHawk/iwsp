@@ -13,6 +13,7 @@ import CountdownTimer from "./components/CountdownTimer";
 // import SiteHeader from "./components/SiteHeader";
 import CheerButton from "./components/CheerButton";
 import JapanMap from "./components/JapanMap";
+import AttendSection from "./components/AttendSection";
 
 const prefectureList = [
   { id: "01", name: "北海道" }, { id: "02", name: "青森県" }, { id: "03", name: "岩手県" },
@@ -192,6 +193,11 @@ function App() {
             </li>
           </ul>
         </section>
+
+        <hr className="rule" />
+
+        {/* ── 事前参加表明 ── */}
+        <AttendSection />
 
         <hr className="rule" />
 
