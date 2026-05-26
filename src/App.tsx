@@ -200,6 +200,88 @@ function App() {
 
         <hr className="rule" />
 
+        {/* ── ミニライブ入場エリア ── */}
+        <section className="section">
+          <SectionLabel accent>ミニライブ入場エリアについて</SectionLabel>
+          <div className="entry-area-container">
+            <div className="entry-card">
+              <h3 className="entry-card-title">優先入場整理券について</h3>
+              <div className="entry-card-body">
+                <p>
+                  10:30より、特典券付き生写真当日販売購入の際に<strong>ランダム配布</strong>いたします。
+                </p>
+                <p>
+                  ※着席観覧・立見観覧エリアでのご観覧には、優先入場整理券が必要となります。<br />
+                  ※優先入場整理券は無くなり次第終了となります。また、お一人様1枚のお渡しになりますので予めご了承下さい。
+                </p>
+              </div>
+            </div>
+
+            <div className="entry-card">
+              <h3 className="entry-card-title">ステージ案内図</h3>
+              <div className="entry-card-body">
+                <div className="stage-map-wrap">
+                  <img 
+                    src="https://whitescorpion.jp/wp-content/uploads/2026/05/ステージ案内図-1-1800x1272.jpg" 
+                    alt="ステージ案内図" 
+                    className="stage-map-img"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="entry-card">
+              <h3 className="entry-card-title">優先入場エリア集合時間</h3>
+              <div className="entry-card-body">
+                <p>
+                  整理券の番号に応じて、以下の時間に集合してください。
+                </p>
+                <div className="entry-times-grid">
+                  <div className="entry-time-item">
+                    <span className="entry-time-range">1 ～ 300番</span>
+                    <span className="entry-time-value">14:30</span>
+                  </div>
+                  <div className="entry-time-item">
+                    <span className="entry-time-range">301 ～ 600番</span>
+                    <span className="entry-time-value">14:50</span>
+                  </div>
+                  <div className="entry-time-item">
+                    <span className="entry-time-range">601 ～ 1200番</span>
+                    <span className="entry-time-value">15:10</span>
+                  </div>
+                  <div className="entry-time-item">
+                    <span className="entry-time-range">1201 ～ 2000番</span>
+                    <span className="entry-time-value">15:25</span>
+                  </div>
+                  <div className="entry-time-item" style={{ gridColumn: "1 / -1" }}>
+                    <span className="entry-time-range">2001番 ～</span>
+                    <span className="entry-time-value">15:40 ～</span>
+                  </div>
+                </div>
+                <p style={{ marginTop: "12px", fontSize: "12px", color: "var(--text-dim)" }}>
+                  ※観覧エリア入場開始：15:50～<br />
+                  ※必ず集合時間にお集まりくださいますようお願いいたします。
+                </p>
+              </div>
+            </div>
+
+            <div className="entry-card">
+              <h3 className="entry-card-title">エリア入場についての注意事項</h3>
+              <div className="entry-card-body">
+                <ul className="diamond-list" style={{ gap: "8px" }}>
+                  <li>着席観覧／立見観覧エリアでのご観覧には、優先入場整理券が必要となります。</li>
+                  <li>着席観覧エリアでは、スタンディングはご遠慮いただいております。</li>
+                  <li>ファミリーエリアは、保護者が優先入場券お持ちの方のみご入場いただけます。未就学児のみ、優先入場整理券は不要でファミリーエリアにご入場いただけます。</li>
+                  <li>後方のフリー観覧エリアは、当日現地で配布する「無料観覧券」をお持ちの方のみご入場いただけます。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <hr className="rule" />
+
         {/* ── 事前参加表明 ── */}
         <AttendSection />
 
@@ -422,6 +504,16 @@ function App() {
             >
               <span className="ref-link-date">2026.05.12</span>
               <span className="ref-link-label">追加・変更情報</span>
+              <span className="ref-link-arrow">詳しくはこちら →</span>
+            </a>
+            <a
+              href="https://whitescorpion.jp/news/2026/05/26/10160/"
+              target="_blank"
+              rel="noreferrer"
+              className="ref-link"
+            >
+              <span className="ref-link-date">2026.05.26</span>
+              <span className="ref-link-label">ミニライブ入場エリアについて</span>
               <span className="ref-link-arrow">詳しくはこちら →</span>
             </a>
           </div>
