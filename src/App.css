@@ -1995,6 +1995,35 @@ body {
     }
 }
 
+/* ── PRODUCT NEW BADGE ── */
+.product-new-badge {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    color: #fff;
+    background: var(--red);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 8px var(--red-glow);
+    display: inline-block;
+    animation: new-badge-glow 2s infinite ease-in-out;
+}
+
+@keyframes new-badge-glow {
+    0%, 100% {
+        box-shadow: 0 0 4px var(--red-glow);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 12px var(--red-glow);
+        transform: scale(1.03);
+    }
+}
+
+
 
 
 

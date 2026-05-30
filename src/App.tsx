@@ -486,6 +486,18 @@ function App() {
             </div>
             <div className="product-price">¥1,650</div>
           </div>
+          <div className="product-card">
+            <div className="product-left">
+              <p className="product-name">
+                ランダム生写真【ドット】
+                <span className="product-new-badge">NEW</span>
+              </p>
+              <p className="product-note">
+                各5枚1セット・特典券1枚付き・当日商品・交換不可
+              </p>
+            </div>
+            <div className="product-price">¥1,650</div>
+          </div>
         </section>
 
         <hr className="rule" />
