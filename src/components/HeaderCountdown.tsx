@@ -40,7 +40,12 @@ export default function HeaderCountdown() {
   const pad = (num: number) => String(num).padStart(2, "0");
 
   if (timeLeft.isOver) {
-    return <span className="header-countdown-ended">EVENT STARTED!</span>;
+    return (
+      <div className="header-live-badge">
+        <span className="live-pulse-dot" />
+        <span className="header-live-text">LIVE NOW</span>
+      </div>
+    );
   }
 
   return (

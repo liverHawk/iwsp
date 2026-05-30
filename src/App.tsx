@@ -13,7 +13,6 @@ import CountdownTimer from "./components/CountdownTimer";
 // import SiteHeader from "./components/SiteHeader";
 import CheerButton from "./components/CheerButton";
 import JapanMap from "./components/JapanMap";
-import AttendSection from "./components/AttendSection";
 
 const prefectureList = [
   { id: "01", name: "北海道" }, { id: "02", name: "青森県" }, { id: "03", name: "岩手県" },
@@ -34,6 +33,44 @@ const prefectureList = [
   { id: "46", name: "鹿児島県" }, { id: "47", name: "沖縄県" }
 ];
 
+const scheduleList = [
+  {
+    time: "10:30",
+    title: "生写真販売 開始",
+    note: "",
+    start: "2026-05-30T10:30:00+09:00",
+    end: "2026-05-30T16:00:00+09:00",
+  },
+  {
+    time: "16:00",
+    title: "ミニライブ",
+    note: "観覧無料・動員目標 3,000人",
+    start: "2026-05-30T16:00:00+09:00",
+    end: "2026-05-30T17:30:00+09:00",
+  },
+  {
+    time: "17:30",
+    title: "特典会 開始",
+    note: "",
+    start: "2026-05-30T17:30:00+09:00",
+    end: "2026-05-30T21:00:00+09:00", // 仮の終了時間
+  },
+];
+
+const getTimelineProgress = (startStr: string, endStr: string, now: Date) => {
+  const start = new Date(startStr).getTime();
+  const end = new Date(endStr).getTime();
+  const current = now.getTime();
+
+  if (current < start) return { status: "future" as const, progress: 0 };
+  if (current >= end) return { status: "past" as const, progress: 100 };
+
+  const total = end - start;
+  const elapsed = current - start;
+  const progress = Math.min(Math.max((elapsed / total) * 100, 0), 100);
+  return { status: "current" as const, progress };
+};
+
 function App() {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [photoType, setPhotoType] = useState<'official' | 'special'>('official');
@@ -43,6 +80,17 @@ function App() {
   const [totalCheers, setTotalCheers] = useState<number>(0);
   const [allPrefectureCheers, setAllPrefectureCheers] = useState<Record<string, number>>({});
   const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  // タイムスケジュール現在時間管理
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 10000); // 10秒おきに更新
+    return () => clearInterval(timer);
+  }, []);
+
 
   const selectedMemberPrefId = selectedMember ? selectedMember.prefectureId : "";
   const selectedMemberColor = selectedMember ? selectedMember.color : "";
@@ -157,28 +205,40 @@ function App() {
           </div>
 
           <div className="timeline">
-            <div className="tl-item">
-              <span className="tl-time">10:30</span>
-              <div className="tl-bar" />
-              <div className="tl-content">
-                <span className="tl-title">生写真販売 開始</span>
-              </div>
-            </div>
-            <div className="tl-item">
-              <span className="tl-time">16:00</span>
-              <div className="tl-bar" />
-              <div className="tl-content">
-                <span className="tl-title">ミニライブ</span>
-                <span className="tl-note">観覧無料・動員目標 3,000人</span>
-              </div>
-            </div>
-            <div className="tl-item">
-              <span className="tl-time">17:30</span>
-              <div className="tl-bar" />
-              <div className="tl-content">
-                <span className="tl-title">特典会 開始</span>
-              </div>
-            </div>
+            {scheduleList.map((item, index) => {
+              const { status, progress } = getTimelineProgress(item.start, item.end, currentTime);
+              
+              return (
+                <div 
+                  key={index} 
+                  className={`tl-item ${status}`}
+                >
+                  <span className="tl-time">{item.time}</span>
+                  
+                  {/* 進行度バーのインジケーター（進行中の間のみドットが移動） */}
+                  {status === "current" && (
+                    <div className="tl-progress-bar">
+                      <div className="tl-progress-fill" style={{ height: `${progress}%` }} />
+                      <span className="tl-progress-dot" style={{ top: `${progress}%` }} />
+                    </div>
+                  )}
+                  {status === "past" && (
+                    <div className="tl-progress-bar full">
+                      <div className="tl-progress-fill" style={{ height: "100%" }} />
+                    </div>
+                  )}
+                  
+                  <div className="tl-content">
+                    <span className="tl-title">
+                      {item.title}
+                      {status === "current" && <span className="tl-status-tag active">進行中</span>}
+                      {status === "past" && <span className="tl-status-tag past">✓ 終了</span>}
+                    </span>
+                    {item.note && <span className="tl-note">{item.note}</span>}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -280,10 +340,6 @@ function App() {
           </div>
         </section>
 
-        <hr className="rule" />
-
-        {/* ── 事前参加表明 ── */}
-        <AttendSection />
 
         <hr className="rule" />
 

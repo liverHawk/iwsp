@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import confetti from "canvas-confetti";
 
 export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState<{
@@ -9,15 +10,20 @@ export default function CountdownTimer() {
     isOver: boolean;
   }>({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: false });
 
-  useEffect(() => {
-    const target = new Date("2026-05-30T10:30:00+09:00").getTime();
+  const target = new Date("2026-05-30T10:30:00+09:00").getTime();
 
+  useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date().getTime();
       const difference = target - now;
 
       if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: true });
+        setTimeLeft((prev) => {
+          if (!prev.isOver) {
+            return { days: 0, hours: 0, minutes: 0, seconds: 0, isOver: true };
+          }
+          return prev;
+        });
         return true; // over
       }
 
@@ -35,11 +41,47 @@ export default function CountdownTimer() {
 
     const interval = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [target]);
+
+  // イベント開始時の紙吹雪演出
+  useEffect(() => {
+    if (timeLeft.isOver) {
+      const duration = 4 * 1000;
+      const end = Date.now() + duration;
+
+      const frame = () => {
+        // 左右から紙吹雪を打ち上げる（赤、金、白の配色）
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.8 },
+          colors: ["#CC1A1A", "#C8971A", "#FFFFFF"]
+        });
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.8 },
+          colors: ["#CC1A1A", "#C8971A", "#FFFFFF"]
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
+
+      frame();
+    }
+  }, [timeLeft.isOver]);
 
   if (timeLeft.isOver) {
     return (
-      <div className="countdown-container ended">
+      <div className="countdown-container ended live-active">
+        <div className="live-status-badge">
+          <span className="live-pulse-dot" />
+          <span className="live-status-text">LIVE NOW</span>
+        </div>
         <span className="countdown-ended-text">RELEASE EVENT STARTED!</span>
       </div>
     );
@@ -78,3 +120,4 @@ export default function CountdownTimer() {
     </div>
   );
 }
+
