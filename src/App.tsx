@@ -44,7 +44,7 @@ const scheduleList = [
   {
     time: "16:00",
     title: "ミニライブ",
-    note: "観覧無料・動員目標 3,000人",
+    note: "観覧無料・目標 3,000人 (速報動員数 2,833人)",
     start: "2026-05-30T16:00:00+09:00",
     end: "2026-05-30T17:30:00+09:00",
   },
@@ -77,9 +77,14 @@ function App() {
 
   const [selectedPrefId, setSelectedPrefId] = useState<string>("");
   const [hoveredPrefId, setHoveredPrefId] = useState<string>("");
-  const [totalCheers, setTotalCheers] = useState<number>(0);
-  const [allPrefectureCheers, setAllPrefectureCheers] = useState<Record<string, number>>({});
-  const [isFetching, setIsFetching] = useState<boolean>(false);
+  
+  // 最終応援データを静的データ（固定値）として設定
+  const [totalCheers, setTotalCheers] = useState<number>(2908);
+  const [allPrefectureCheers, setAllPrefectureCheers] = useState<Record<string, number>>({
+    "01": 87, "04": 103, "07": 5, "11": 22, "12": 100, "13": 205, "14": 353,
+    "23": 14, "26": 140, "27": 700, "28": 1, "31": 556, "33": 34, "37": 1,
+    "40": 556, "44": 31
+  });
 
   // タイムスケジュール現在時間管理
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
@@ -95,30 +100,6 @@ function App() {
 
   const selectedMemberPrefId = selectedMember ? selectedMember.prefectureId : "";
   const selectedMemberColor = selectedMember ? selectedMember.color : "";
-
-  // 全国の応援状況をバッチで取得する
-  const fetchAllCheers = async (showLoading = false) => {
-    if (showLoading) setIsFetching(true);
-    try {
-      const response = await fetch("/api/cheers");
-      if (response.ok) {
-        const data = await response.json();
-        setTotalCheers(data.total);
-        setAllPrefectureCheers(data.prefectures);
-      }
-    } catch (error) {
-      console.error("Failed to fetch all cheers:", error);
-    } finally {
-      if (showLoading) setIsFetching(false);
-    }
-  };
-
-  // 初回マウント時および5秒おきの定期ポーリング
-  useEffect(() => {
-    fetchAllCheers(true);
-    const interval = setInterval(() => fetchAllCheers(false), 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleSendSuccess = (addedCount: number) => {
     // 即時反映（楽観的UI更新）
@@ -446,13 +427,9 @@ function App() {
                 <span className="current-cheers-label">
                   {prefectureList.find(p => p.id === selectedPrefId)?.name} の現在の応援数
                 </span>
-                {isFetching && prefectureCheers === null ? (
-                  <span className="current-cheers-value loading">Loading...</span>
-                ) : (
-                  <span className="current-cheers-value" key={prefectureCheers ?? 0}>
-                    {prefectureCheers !== null ? prefectureCheers.toLocaleString() : 0} <span className="unit">Cheers</span>
-                  </span>
-                )}
+                <span className="current-cheers-value" key={prefectureCheers ?? 0}>
+                  {prefectureCheers !== null ? prefectureCheers.toLocaleString() : 0} <span className="unit">Cheers</span>
+                </span>
               </div>
 
               <CheerButton 
