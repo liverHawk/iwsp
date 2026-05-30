@@ -41,9 +41,8 @@ export default function HeaderCountdown() {
 
   if (timeLeft.isOver) {
     return (
-      <div className="header-live-badge">
-        <span className="live-pulse-dot" />
-        <span className="header-live-text">LIVE NOW</span>
+      <div className="header-live-badge finished">
+        <span className="header-live-text">FINISHED</span>
       </div>
     );
   }

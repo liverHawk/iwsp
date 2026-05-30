@@ -43,46 +43,54 @@ export default function CountdownTimer() {
     return () => clearInterval(interval);
   }, [target]);
 
-  // イベント開始時の紙吹雪演出
-  useEffect(() => {
-    if (timeLeft.isOver) {
-      const duration = 4 * 1000;
-      const end = Date.now() + duration;
+  // 手動で紙吹雪を降らせる演出
+  const triggerConfetti = () => {
+    const duration = 3 * 1000;
+    const end = Date.now() + duration;
 
-      const frame = () => {
-        // 左右から紙吹雪を打ち上げる（赤、金、白の配色）
-        confetti({
-          particleCount: 3,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0, y: 0.8 },
-          colors: ["#CC1A1A", "#C8971A", "#FFFFFF"]
-        });
-        confetti({
-          particleCount: 3,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1, y: 0.8 },
-          colors: ["#CC1A1A", "#C8971A", "#FFFFFF"]
-        });
+    const frame = () => {
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.8 },
+        colors: ["#CC1A1A", "#C8971A", "#FFFFFF"]
+      });
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.8 },
+        colors: ["#CC1A1A", "#C8971A", "#FFFFFF"]
+      });
 
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
-      };
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
 
-      frame();
-    }
-  }, [timeLeft.isOver]);
+    frame();
+  };
 
   if (timeLeft.isOver) {
     return (
-      <div className="countdown-container ended live-active">
-        <div className="live-status-badge">
-          <span className="live-pulse-dot" />
-          <span className="live-status-text">LIVE NOW</span>
+      <div className="countdown-container ended finished">
+        <div className="live-status-badge finished">
+          <span className="live-status-text">EVENT FINISHED</span>
         </div>
-        <span className="countdown-ended-text">RELEASE EVENT STARTED!</span>
+        <span className="countdown-ended-text">イベントは終了しました</span>
+        <p className="countdown-sub-text">たくさんのご来場ありがとうございました！</p>
+        
+        {/* 動員数速報表示 */}
+        <div className="attendance-flash">
+          <span className="attendance-label">速報動員数</span>
+          <span className="attendance-value">2,833<span className="attendance-unit">人</span></span>
+        </div>
+
+        {/* 紙吹雪の確認ボタン */}
+        <button className="confetti-demo-btn" onClick={triggerConfetti}>
+          🎉 紙吹雪演出を確認する
+        </button>
       </div>
     );
   }

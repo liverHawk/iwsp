@@ -2138,6 +2138,120 @@ body {
     text-shadow: 0 0 8px var(--red-glow);
 }
 
+/* ══════════════════════════════════════════════
+   EVENT FINISHED STATE & DEMO BUTTONS
+   ══════════════════════════════════════════════ */
+.countdown-container.ended.finished {
+    background: rgba(15, 10, 8, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    align-items: center;
+    padding: 24px;
+}
+
+.countdown-container.ended.finished .countdown-ended-text {
+    animation: none;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+.live-status-badge.finished {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-dim);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.countdown-sub-text {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: -4px;
+    text-align: center;
+}
+
+.attendance-flash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(200, 151, 26, 0.12) 0%, rgba(204, 26, 26, 0.08) 100%);
+    border: 1px solid rgba(200, 151, 26, 0.4);
+    border-radius: 8px;
+    padding: 16px 20px;
+    width: 100%;
+    margin: 8px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: border-color 0.3s ease;
+}
+
+.attendance-flash:hover {
+    border-color: var(--gold);
+}
+
+.attendance-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.attendance-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--gold);
+    text-shadow: 0 0 15px rgba(200, 151, 26, 0.3);
+    line-height: 1;
+}
+
+.attendance-unit {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-left: 4px;
+    text-shadow: none;
+}
+
+.confetti-demo-btn {
+    font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--red);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(204, 26, 26, 0.3);
+    letter-spacing: 0.05em;
+}
+
+.confetti-demo-btn:hover {
+    transform: translateY(-2px);
+    background: #e61f1f;
+    box-shadow: 0 6px 20px rgba(204, 26, 26, 0.4);
+}
+
+.confetti-demo-btn:active {
+    transform: translateY(0);
+}
+
+/* Header Live Badge Finished */
+.header-live-badge.finished {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-dim);
+    box-shadow: none;
+}
+
 
 
 

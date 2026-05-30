@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./CheerButton.css";
-
-const WAIT_SECONDS = 7;
 
 interface Particle {
   id: number;
@@ -18,78 +16,18 @@ interface CheerButtonProps {
 
 export default function CheerButton({ prefectureId, onSendSuccess }: CheerButtonProps) {
     const [count, setCount] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(0);
-    const [sent, setSent] = useState(false);
     const [particles, setParticles] = useState<Particle[]>([]);
-
-    const sendBuffer = useRef(0);
-    const timeLeftRef = useRef(0);
-    const intervalRef = useRef<number | null>(null);
 
     // 都道府県が変更された場合に、状態をリセットする
     useEffect(() => {
         setCount(0);
-        setTimeLeft(0);
-        setSent(false);
-        sendBuffer.current = 0;
-        timeLeftRef.current = 0;
-        if (intervalRef.current) {
-            window.clearInterval(intervalRef.current);
-        }
     }, [prefectureId]);
 
-    useEffect(() => {
-        const sendCheers = async () => {
-            setSent(true);
-            const countToSend = sendBuffer.current;
-            if (countToSend === 0) return;
-
-            // 送信前にバッファをクリア（二重送信防止）
-            sendBuffer.current = 0;
-            
-            try {
-                const response = await fetch("/api/cheers", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        prefectureId,
-                        count: countToSend,
-                    }),
-                });
-
-                if (response.ok) {
-                    onSendSuccess(countToSend);
-                } else {
-                    throw new Error("Failed to send cheers to API");
-                }
-            } catch (error) {
-                console.error("送信に失敗しました:", error);
-                setSent(false);
-            }
-        };
-
-        if (timeLeft === 0 && sendBuffer.current > 0) {
-            sendCheers();
-        }
-    }, [timeLeft, prefectureId, onSendSuccess]);
-
-    useEffect(() => {
-        return () => {
-            if (intervalRef.current) {
-                window.clearInterval(intervalRef.current);
-            }
-        };
-    }, []);
-
     const clickHandler = () => {
-        // すでに送信完了している場合は処理を行わない
-        if (sent) return;
-
-        timeLeftRef.current = WAIT_SECONDS;
-        setTimeLeft(WAIT_SECONDS);
-
         setCount((prev) => prev + 1);
-        sendBuffer.current += 1;
+        
+        // 親の応援数ステートもローカルでインクリメントして即時反映させる（保存はされない）
+        onSendSuccess(1);
 
         // エフェクト用のパーティクル（絵文字）を作成
         const emojis = ["🔥", "🎉", "❤️", "🌟", "✨", "👏"];
@@ -107,26 +45,7 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
         setTimeout(() => {
             setParticles((prev) => prev.filter((p) => p.id !== newParticle.id));
         }, 800);
-
-        if (intervalRef.current) {
-            window.clearInterval(intervalRef.current);
-        }
-        
-        intervalRef.current = window.setInterval(() => {
-            setTimeLeft((prevTime) => {
-                if (prevTime <= 1) {
-                    if (intervalRef.current) {
-                        window.clearInterval(intervalRef.current);
-                    }
-                    return 0;
-                }
-                return prevTime - 1;
-            });
-        }, 1000);
     };
-
-    // 残り時間（3〜0秒）に基づくプログレスバーの幅
-    const progressWidth = `${((timeLeft - 1) / (WAIT_SECONDS - 1)) * 100}%`;
 
     return (
         <div className="cheer-container">
@@ -139,31 +58,21 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
                         <h1 className="count-display" key={count}>
                             {count}
                         </h1>
-                        <span className="count-label">Total Cheers</span>
+                        <span className="count-label">Your Cheers (Session)</span>
                     </>
                 ) : (
                     <span className="count-label" style={{ opacity: 0.6 }}>
-                        Tap to start cheering!
+                        タップしてエールを送る（エフェクト確認用）
                     </span>
                 )}
             </div>
 
             <div className="timer-section">
-                {timeLeft > 0 && (
-                    <>
-                        <span className="timer-text">７秒間お待ちください (残り{timeLeft}s)</span>
-                        <div className="timer-bar-container">
-                            <div 
-                                className="timer-bar" 
-                                style={{ width: progressWidth }}
-                            />
-                        </div>
-                    </>
-                )}
+                {/* 待機タイマーは削除 */}
             </div>
 
-            <button className="cheer-btn-main" onClick={clickHandler} disabled={sent}>
-                Cheer!!
+            <button className="cheer-btn-main" onClick={clickHandler}>
+                エールを送る（エフェクト確認）
             </button>
 
             {/* パーティクルエフェクトの描画 */}
@@ -182,16 +91,9 @@ export default function CheerButton({ prefectureId, onSendSuccess }: CheerButton
             ))}
 
             <div className="status-badge-wrap">
-                {sent && (
-                    <span className="status-badge sent">
-                        ✓ Sent to Database
-                    </span>
-                )}
-                {!sent && timeLeft > 0 && (
-                    <span className="status-badge waiting">
-                        ⚡ Buffering...
-                    </span>
-                )}
+                <span className="status-badge demo-mode" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)", color: "var(--text-dim)", borderColor: "rgba(255, 255, 255, 0.1)" }}>
+                    🔒 デモモード（保存されません）
+                </span>
             </div>
         </div>
     );
