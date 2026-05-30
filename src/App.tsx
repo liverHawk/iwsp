@@ -11,27 +11,7 @@ import { type Member, memberList, payments, tokutenItems, notes } from "./data/e
 import SectionLabel from "./components/SectionLabel";
 import CountdownTimer from "./components/CountdownTimer";
 // import SiteHeader from "./components/SiteHeader";
-import CheerButton from "./components/CheerButton";
-import JapanMap from "./components/JapanMap";
 
-const prefectureList = [
-  { id: "01", name: "北海道" }, { id: "02", name: "青森県" }, { id: "03", name: "岩手県" },
-  { id: "04", name: "宮城県" }, { id: "05", name: "秋田県" }, { id: "06", name: "山形県" },
-  { id: "07", name: "福島県" }, { id: "08", name: "茨城県" }, { id: "09", name: "栃木県" },
-  { id: "10", name: "群馬県" }, { id: "11", name: "埼玉県" }, { id: "12", name: "千葉県" },
-  { id: "13", name: "東京都" }, { id: "14", name: "神奈川県" }, { id: "15", name: "新潟県" },
-  { id: "16", name: "富山県" }, { id: "17", name: "石川県" }, { id: "18", name: "福井県" },
-  { id: "19", name: "山梨県" }, { id: "20", name: "長野県" }, { id: "21", name: "岐阜県" },
-  { id: "22", name: "静岡県" }, { id: "23", name: "愛知県" }, { id: "24", name: "三重県" },
-  { id: "25", name: "滋賀県" }, { id: "26", name: "京都府" }, { id: "27", name: "大阪府" },
-  { id: "28", name: "兵庫県" }, { id: "29", name: "奈良県" }, { id: "30", name: "和歌山県" },
-  { id: "31", name: "鳥取県" }, { id: "32", name: "島根県" }, { id: "33", name: "岡山県" },
-  { id: "34", name: "広島県" }, { id: "35", name: "山口県" }, { id: "36", name: "徳島県" },
-  { id: "37", name: "香川県" }, { id: "38", name: "愛媛県" }, { id: "39", name: "高知県" },
-  { id: "40", name: "福岡県" }, { id: "41", name: "佐賀県" }, { id: "42", name: "長崎県" },
-  { id: "43", name: "熊本県" }, { id: "44", name: "大分県" }, { id: "45", name: "宮崎県" },
-  { id: "46", name: "鹿児島県" }, { id: "47", name: "沖縄県" }
-];
 
 const scheduleList = [
   {
@@ -75,17 +55,6 @@ function App() {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [photoType, setPhotoType] = useState<'official' | 'special'>('official');
 
-  const [selectedPrefId, setSelectedPrefId] = useState<string>("");
-  const [hoveredPrefId, setHoveredPrefId] = useState<string>("");
-  
-  // 最終応援データを静的データ（固定値）として設定
-  const [totalCheers, setTotalCheers] = useState<number>(2908);
-  const [allPrefectureCheers, setAllPrefectureCheers] = useState<Record<string, number>>({
-    "01": 87, "04": 103, "07": 5, "11": 22, "12": 100, "13": 205, "14": 353,
-    "23": 14, "26": 140, "27": 700, "28": 1, "31": 556, "33": 34, "37": 1,
-    "40": 556, "44": 31
-  });
-
   // タイムスケジュール現在時間管理
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [showQRCode, setShowQRCode] = useState(false);
@@ -96,23 +65,6 @@ function App() {
     }, 10000); // 10秒おきに更新
     return () => clearInterval(timer);
   }, []);
-
-
-  const selectedMemberPrefId = selectedMember ? selectedMember.prefectureId : "";
-  const selectedMemberColor = selectedMember ? selectedMember.color : "";
-
-  const handleSendSuccess = (addedCount: number) => {
-    // 即時反映（楽観的UI更新）
-    setTotalCheers((prev) => prev + addedCount);
-    if (selectedPrefId) {
-      setAllPrefectureCheers((prev) => ({
-        ...prev,
-        [selectedPrefId]: (prev[selectedPrefId] || 0) + addedCount,
-      }));
-    }
-  };
-
-  const prefectureCheers = selectedPrefId ? (allPrefectureCheers[selectedPrefId] || 0) : null;
 
   return (
     <div className="page">
@@ -338,8 +290,6 @@ function App() {
                   setSelectedMember(member);
                   setPhotoType('official');
                 }}
-                onMouseEnter={() => !member.inactive && setHoveredPrefId(member.prefectureId)}
-                onMouseLeave={() => setHoveredPrefId("")}
               >
                 <div className="member-card-img-wrap">
                   <img src={member.image} alt={member.name} loading="lazy" />
@@ -354,91 +304,6 @@ function App() {
               </div>
             ))}
           </div>
-        </section>
-
-        <hr className="rule" />
-
-        {/* ── 都道府県別 応援カウンター ── */}
-        <section className="section cheer-section-wrap">
-          <SectionLabel accent>都道府県別 応援カウンター</SectionLabel>
-          <p className="cheer-desc">あなたの住んでいる都道府県からメンバーへエールを送りましょう！日本地図をクリックして都道府県を選択できます。</p>
-          
-          {/* 全国合計応援数表示ボード */}
-          <div className="total-cheers-board">
-            <span className="total-cheers-title">🔥 全国合計応援数 🔥</span>
-            <h1 className="total-cheers-counter" key={totalCheers}>
-              {totalCheers.toLocaleString()} <span className="cheers-unit">Cheers</span>
-            </h1>
-            <p className="total-cheers-sub">みんなのエールがリアルタイムに集計中！</p>
-          </div>
-
-          {/* 日本地図ヒートマップ */}
-          <div className="map-display-container">
-            <JapanMap 
-              cheerData={allPrefectureCheers} 
-              selectedPrefId={selectedPrefId} 
-              onSelectPrefecture={(id) => setSelectedPrefId(id)} 
-              hoveredPrefId={hoveredPrefId}
-              selectedMemberPrefId={selectedMemberPrefId}
-              selectedMemberColor={selectedMemberColor}
-            />
-          </div>
-
-          <div className="cheer-select-container">
-            <select 
-              className="cheer-select"
-              value={selectedPrefId} 
-              onChange={(e) => setSelectedPrefId(e.target.value)}
-            >
-              <option value="">都道府県を選択（または地図をクリック）</option>
-              {prefectureList.map((pref) => {
-                const members = memberList.filter(m => m.prefectureId === pref.id);
-                const memberNames = members.map(m => m.name).join(", ");
-                const label = memberNames ? `${pref.name} (${memberNames} 出身)` : pref.name;
-                return (
-                  <option key={pref.id} value={pref.id}>
-                    {label}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-
-          {selectedPrefId && (
-            <div className="cheer-active-container">
-              {(() => {
-                const prefName = prefectureList.find(p => p.id === selectedPrefId)?.name;
-                const members = memberList.filter(m => m.birthplace === prefName);
-                if (members.length > 0) {
-                  return (
-                    <div className="pref-member-notice" style={{ "--pref-col": members[0].color } as React.CSSProperties}>
-                      <span className="notice-icon">🎉</span>
-                      <span className="notice-text">
-                        {members.map(m => m.name).join(" & ")} の出身地です！応援しましょう！
-                      </span>
-                      <span className="notice-icon">🎉</span>
-                    </div>
-                  );
-                }
-                return null;
-              })()}
-
-              <div className="current-cheers-box">
-                <span className="current-cheers-label">
-                  {prefectureList.find(p => p.id === selectedPrefId)?.name} の現在の応援数
-                </span>
-                <span className="current-cheers-value" key={prefectureCheers ?? 0}>
-                  {prefectureCheers !== null ? prefectureCheers.toLocaleString() : 0} <span className="unit">Cheers</span>
-                </span>
-              </div>
-
-              <CheerButton 
-                prefectureId={selectedPrefId} 
-                onSendSuccess={handleSendSuccess} 
-                key={selectedPrefId}
-              />
-            </div>
-          )}
         </section>
 
         <hr className="rule" />
