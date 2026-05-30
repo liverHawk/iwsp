@@ -83,6 +83,7 @@ function App() {
 
   // タイムスケジュール現在時間管理
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [showQRCode, setShowQRCode] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -613,6 +614,12 @@ function App() {
           FOOTER
       ════════════════════════════════ */}
       <footer className="footer">
+        <button 
+          className="qr-open-btn"
+          onClick={() => setShowQRCode(true)}
+        >
+          📱 ページをスマホで共有 (QRコード)
+        </button>
         <p className="footer-logo">I.W.S.P.</p>
         <p className="footer-copy">© IKEBUKURO WHITE SCORPION PROJECT / MMM</p>
       </footer>
@@ -692,6 +699,30 @@ function App() {
                   )}
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── QRコードモーダル ── */}
+      {showQRCode && (
+        <div className="qr-modal-overlay" onClick={() => setShowQRCode(false)}>
+          <div className="qr-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="qr-modal-close" onClick={() => setShowQRCode(false)}>✕</button>
+            <div className="qr-modal-body">
+              <h3 className="qr-modal-title">スマホでアクセス</h3>
+              <p className="qr-modal-desc">
+                QRコードをスキャンして、スマートフォンで本サイトを閲覧・応援カウンターへ参加できます。
+              </p>
+              <div className="qr-code-wrap">
+                <img 
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&color=000000&bgcolor=ffffff&data=https://iwsp.vercel.app" 
+                  alt="https://iwsp.vercel.app"
+                  className="qr-code-img"
+                  loading="lazy"
+                />
+              </div>
+              <p className="qr-url">iwsp.vercel.app</p>
             </div>
           </div>
         </div>

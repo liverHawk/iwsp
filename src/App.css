@@ -2023,6 +2023,121 @@ body {
     }
 }
 
+/* ── QR CODE FOOTER BUTTON ── */
+.qr-open-btn {
+    font-family: 'Outfit', var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border-dim);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qr-open-btn:hover {
+    color: #fff;
+    border-color: var(--red);
+    box-shadow: 0 0 15px rgba(204, 26, 26, 0.3);
+    transform: translateY(-2px);
+}
+
+/* ── QR CODE MODAL ── */
+.qr-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.qr-modal-content {
+    background: var(--bg-card);
+    border: 2px solid var(--red);
+    box-shadow: 0 10px 40px rgba(204, 26, 26, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    width: 100%;
+    max-width: 360px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.qr-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: color 0.2s;
+}
+
+.qr-modal-close:hover {
+    color: #fff;
+}
+
+.qr-modal-body {
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.qr-modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 8px var(--red-glow);
+}
+
+.qr-modal-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.qr-code-wrap {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    display: inline-block;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 16px;
+}
+
+.qr-code-img {
+    display: block;
+    width: 200px;
+    height: 200px;
+}
+
+.qr-url {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 8px var(--red-glow);
+}
+
 
 
 
