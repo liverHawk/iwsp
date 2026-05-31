@@ -432,6 +432,39 @@ function App() {
 
         <hr className="rule" />
 
+        {/* ── アンケート（有志企画） ── */}
+        <section className="section survey-section">
+          <SectionLabel accent>アンケート</SectionLabel>
+          <div className="survey-card">
+            <div className="survey-badge-wrap">
+              <span className="survey-badge">有志・応援団企画</span>
+            </div>
+            <h3 className="survey-title">来場者アンケートご協力のお願い</h3>
+            <p className="survey-desc">
+              本日はイベントにご来場いただきありがとうございました！<br />
+              今後の有志活動の参考や、ファン同士の交流・応援を盛り上げるため、アンケートへのご協力をお願いいたします。
+            </p>
+            <div className="survey-disclaimer">
+              <span className="disclaimer-icon">⚠️</span>
+              <p className="disclaimer-text">
+                本アンケートはファン有志・応援団が独自に実施している非公式のものです。WHITE SCORPION公式（運営事務局・所属事務所等）とは一切関係ありません。
+              </p>
+            </div>
+            <div className="survey-btn-wrap">
+              <a
+                href="https://forms.gle/r8ca8kFakCG7dLXA8"
+                target="_blank"
+                rel="noreferrer"
+                className="survey-btn"
+              >
+                アンケートに回答する
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <hr className="rule" />
+
         {/* ── お問い合わせ ── */}
         <section className="section contact-section">
           <SectionLabel accent>お問い合わせ</SectionLabel>
