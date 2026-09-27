@@ -1,13 +1,5 @@
 {
   "buildCommand": "vite build",
   "outputDirectory": "dist",
-  "framework": "vite",
-  "redirects": [
-    { "source": "/", "destination": "/iwsp/", "permanent": false }
-  ],
-  "rewrites": [
-    { "source": "/iwsp/api/:path*", "destination": "/api/:path*" },
-    { "source": "/iwsp", "destination": "/index.html" },
-    { "source": "/iwsp/:path*", "destination": "/:path*" }
-  ]
+  "framework": "vite"
 }
