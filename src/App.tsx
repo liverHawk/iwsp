@@ -591,13 +591,13 @@ function App() {
               </p>
               <div className="qr-code-wrap">
                 <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&color=000000&bgcolor=ffffff&data=https://iwsp.vercel.app" 
-                  alt="https://iwsp.vercel.app"
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&color=000000&bgcolor=ffffff&data=https://whsp-home.vercel.app/iwsp/" 
+                  alt="https://whsp-home.vercel.app/iwsp/"
                   className="qr-code-img"
                   loading="lazy"
                 />
               </div>
-              <p className="qr-url">iwsp.vercel.app</p>
+              <p className="qr-url">whsp-home.vercel.app/iwsp</p>
             </div>
           </div>
         </div>
